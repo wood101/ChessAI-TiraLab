@@ -1,4 +1,4 @@
-# Chess Articial intelligence
+# Chess Articial Intelligence
 
 Functioning chess game with an AI you can play against. 
 
