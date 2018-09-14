@@ -7,10 +7,9 @@ package fi.helsinki.chessai.board.pieces;
 
 import fi.helsinki.chessai.board.Board;
 import java.util.Collection;
-import java.util.List;
 
 /**
- *
+ * Class for the chess pieces.
  * @author janne
  */
 public abstract class Piece {
@@ -22,9 +21,53 @@ public abstract class Piece {
         this.position = position;
     }
     
+    /**
+     * Get the allegiance of the piece.
+     * @return 
+     */
     public Side getPieceSide() {
         return this.pieceSide;
     }
     
-    public abstract Collection<Move> legalMoves(final Board board);
+    /**
+     * Get the position of the piece on the board.
+     * @return 
+     */
+    public int getPosition() {
+        return this.position;
+    }
+    
+    /**
+     * Get a list of the possible moves the piece can make.
+     * @param board
+     * @return 
+     */
+    public abstract Collection<Move>getLegalMoves(final Board board);
+    
+    /**
+     * Enum of the different types of pieces
+     */
+    public enum PieceType {
+        PAWN("P"),
+        KNIGHT("N"),
+        BISHOP("B"),
+        ROOK("R"),
+        QUEEN("Q"),
+        KING("K");
+                
+        private String pieceName;
+        
+        /**
+         * Name of the piece.
+         * @param pieceName 
+         */
+        PieceType(final String pieceName) {
+            this.pieceName = pieceName;
+        }
+        
+        @Override
+        public String toString() {
+            return this.pieceName;
+        }
+    }
 }

@@ -9,28 +9,27 @@ import com.google.common.collect.ImmutableList;
 import fi.helsinki.chessai.board.Board;
 import fi.helsinki.chessai.board.BoardUtil;
 import fi.helsinki.chessai.board.Tile;
-import fi.helsinki.chessai.board.pieces.Move.*;
 import java.util.ArrayList;
 import java.util.Collection;
 
 /**
- * The class for the knight piece
+ * The class for the king piece
  * @author janne
  */
-public class Knight extends Piece {
-    private final static int[] PossibleMoves = {-17, -15, -10, -6, 6, 10, 15, 17};
+public class King extends Piece{
+    private final static int[] PossibleMoves = {-9, -8, -7, -1, 1, 7, 8, 9};
     
     /**
      * Constructor
      * @param position
      * @param pieceSide 
      */
-    public Knight(final int position, final Side pieceSide) {
+    public King(final int position, final Side pieceSide) {
         super(position, pieceSide);
     }
     
-    /**
-     * Legal moves for the knight piece.
+     /**
+     * Legal moves for the king piece.
      * @param board
      * @return returns legal moves
      */
@@ -40,17 +39,20 @@ public class Knight extends Piece {
         final Collection<Move> legalMoves = new ArrayList<>();
         
         for(final int offset : PossibleMoves) {
-            pieceDestination = this.position + offset;    
-            if(BoardUtil.isValidTile(pieceDestination) && !PieceUtil.isOutOfBounds(this.position, pieceDestination, 2)) {
+            pieceDestination = this.position + offset;
+            if(PieceUtil.isOutOfBounds(this.position, pieceDestination, 1)) {
+                continue;
+            }           
+            if(BoardUtil.isValidTile(pieceDestination)) {
                 
                 final Tile destinationTile = board.getTile(pieceDestination);
                 
                 if(!destinationTile.occupied()) {
-                    legalMoves.add(new RegularMove(board, this, pieceDestination));
+                    legalMoves.add(new Move.RegularMove(board, this, pieceDestination));
                 } else {
                     final Piece pieceAtDestination = destinationTile.getPiece();
                     if(this.pieceSide != pieceAtDestination.getPieceSide()) {
-                        legalMoves.add(new AttackMove(board, this, pieceDestination, pieceAtDestination));
+                        legalMoves.add(new Move.AttackMove(board, this, pieceDestination, pieceAtDestination));
                     }
                 }
             }
@@ -60,6 +62,6 @@ public class Knight extends Piece {
     
         @Override
     public String toString() {
-        return PieceType.KNIGHT.toString();
+        return PieceType.KING.toString();
     }
 }

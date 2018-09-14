@@ -4,6 +4,9 @@
 | :----:|:-----| :-----|
 | 7.9 | 1    | Research |
 | 9.9. | 1    | Documentation |
+| 13.9 | 3    | Coding almost all of the chess pieces |
+| 14.9. | 3    | Coding the rest of the chess pieces and initialization of the board |
+| 14.9. | 2    | Tests and bug fixing |
 
 <br>
-Total hours: 2
+Total hours: 10
