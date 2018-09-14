@@ -2,9 +2,9 @@
 
 ## What have I done this week?
 
--Coded an initialization of a chess board
--Coded almost all of the possible moves for the chess pieces
--Made a couple of tests
+- Coded an initialization of a chess board
+- Coded almost all of the possible moves for the chess pieces
+- Made a couple of tests
 
 ## How much progress have I made?
 
