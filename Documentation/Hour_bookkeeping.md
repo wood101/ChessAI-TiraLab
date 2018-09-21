@@ -7,7 +7,7 @@
 | 13.9 | 3    | Coding almost all of the chess pieces |
 | 14.9. | 3    | Coding the rest of the chess pieces and initialization of the board |
 | 14.9. | 2    | Tests and bug fixing |
-| 21.9. | 7    | More moves, some of the graphichal interface, players |
+| 21.9. | 9    | More moves, some of the graphichal interface, players |
 
 <br>
-Total hours: 10
+Total hours: 19

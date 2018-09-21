@@ -92,7 +92,7 @@ public final class Board {
         builder.setPiece(new Knight(57, Side.WHITE));
         builder.setPiece(new Knight(62, Side.WHITE));
         builder.setPiece(new Rook(56, Side.WHITE));
-        builder.setPiece(new Rook(64, Side.WHITE));
+        builder.setPiece(new Rook(63, Side.WHITE));
         builder.setPiece(new Bishop(61, Side.WHITE));
         builder.setPiece(new Bishop(58, Side.WHITE));
         for(int i = 48; i <= 55; i++) {

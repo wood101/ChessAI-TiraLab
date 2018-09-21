@@ -48,14 +48,19 @@ public class WhitePlayer extends Player {
             if(!this.board.getTile(61).occupied() && !this.board.getTile(62).occupied()) {
                 final Tile rookTile = this.board.getTile(63);
                 if(rookTile.occupied() && rookTile.getPiece().isFirstMove()) {
-                    if(Player.attacksOnTile(61, opponentMoves).isEmpty() && Player.attacksOnTile(62, opponentMoves).isEmpty() && rookTile.getPiece().getPieceType() == PieceType.ROOK)
-                    kingCastles.add(new Move.CastleMove(this.board, this.playerKing, 62, (Rook) rookTile.getPiece(), rookTile.getTileCoordinate(), 61));
+                    if(Player.attacksOnTile(61, opponentMoves).isEmpty() && Player.attacksOnTile(62, opponentMoves).isEmpty() && rookTile.getPiece().getPieceType() == PieceType.ROOK) {
+                        kingCastles.add(new Move.CastleMove(this.board, this.playerKing, 62, (Rook) rookTile.getPiece(), rookTile.getTileCoordinate(), 61));   
+                    }
+                    
                 }
             }
             if(!this.board.getTile(59).occupied() && !this.board.getTile(58).occupied() && !this.board.getTile(57).occupied()) {
                 final Tile rookTile = this.board.getTile(56);
                 if(rookTile.occupied() && rookTile.getPiece().isFirstMove()) {
-                    kingCastles.add(new Move.CastleMove(this.board, this.playerKing, 58, (Rook) rookTile.getPiece(), rookTile.getTileCoordinate(), 59));
+                    if(Player.attacksOnTile(58, opponentMoves).isEmpty() && Player.attacksOnTile(59, opponentMoves).isEmpty() && rookTile.getPiece().getPieceType() == Piece.PieceType.ROOK) {
+                        kingCastles.add(new Move.CastleMove(this.board, this.playerKing, 58, (Rook) rookTile.getPiece(), rookTile.getTileCoordinate(), 59));    
+                    }
+                    
                 }
             }
         }
