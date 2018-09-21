@@ -1,5 +1,6 @@
 package fi.helsinki.chessai.board.pieces;
 
+import fi.helsinki.chessai.Side;
 import fi.helsinki.chessai.board.Board;
 import java.util.Collection;
 
@@ -16,7 +17,7 @@ public class Bishop extends Piece {
      * @param pieceSide The colour of the piece
      */
     public Bishop (final int position, final Side pieceSide) {
-        super(position, pieceSide);
+        super(PieceType.BISHOP, position, pieceSide);
     }
     
     /**
@@ -32,5 +33,10 @@ public class Bishop extends Piece {
     @Override
     public String toString() {
         return PieceType.BISHOP.toString();
+    }
+
+    @Override
+    public Piece movePiece(final Move move) {
+        return new Bishop(move.getDestination(), move.getMovedPiece().getPieceSide());
     }
 }

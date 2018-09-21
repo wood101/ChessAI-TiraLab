@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 
+import fi.helsinki.chessai.Side;
 import fi.helsinki.chessai.board.Board;
 import fi.helsinki.chessai.board.pieces.*;
 import java.util.Collection;
@@ -19,10 +20,10 @@ public class PieceTest {
     @Test
     public void TestMoveListForKnight() {
         Board.Builder boardBuilder = new Board.Builder();
-        boardBuilder.setPiece(new Knight(12, Side.BLACK));
+        boardBuilder.setPiece(new Knight(20, Side.BLACK));
         Board board = boardBuilder.build();
-        Collection<Move> moves = board.getTile(12).getPiece().getLegalMoves(board);
-        assertTrue(moves.size() == 6);
+        Collection<Move> moves = board.getTile(20).getPiece().getLegalMoves(board);
+        assertTrue(moves.size() == 8);
     }
 
     @Test
@@ -59,6 +60,55 @@ public class PieceTest {
         Board board = boardBuilder.build();
         Collection<Move> moves = board.getTile(26).getPiece().getLegalMoves(board);
         assertTrue(moves.size() == 8);
+    }
+    
+    @Test
+    public void TestAttackMoveWithKing() {
+        Board.Builder boardBuilder = new Board.Builder();
+        boardBuilder.setPiece(new King(26, Side.WHITE));
+        boardBuilder.setPiece(new Bishop(25, Side.BLACK));
+        Board board = boardBuilder.build();
+        Collection<Move> moves = board.getTile(26).getPiece().getLegalMoves(board);
+        assertTrue(moves.size() == 8);
+    }
+
+    @Test
+    public void TestAttackMoveWithKnight() {
+        Board.Builder boardBuilder = new Board.Builder();
+        boardBuilder.setPiece(new Knight(0, Side.WHITE));
+        boardBuilder.setPiece(new Bishop(10, Side.BLACK));
+        Board board = boardBuilder.build();
+        Collection<Move> moves = board.getTile(0).getPiece().getLegalMoves(board);
+        assertTrue(moves.size() == 2);
+    }
+    
+    @Test
+    public void TestAttackMoveWithVectorMovement() {
+        Board.Builder boardBuilder = new Board.Builder();
+        boardBuilder.setPiece(new Bishop(0, Side.WHITE));
+        boardBuilder.setPiece(new Bishop(63, Side.BLACK));
+        Board board = boardBuilder.build();
+        Collection<Move> moves = board.getTile(0).getPiece().getLegalMoves(board);
+        assertTrue(moves.size() == 7);
+    }
+    
+    @Test
+    public void TestMoveOnAlly() {
+        Board.Builder boardBuilder = new Board.Builder();
+        boardBuilder.setPiece(new King(26, Side.WHITE));
+        boardBuilder.setPiece(new Bishop(25, Side.WHITE));
+        Board board = boardBuilder.build();
+        Collection<Move> moves = board.getTile(26).getPiece().getLegalMoves(board);
+        assertTrue(moves.size() == 7);
+    }
+
+    @Test
+    public void TestLegalMovesForKnight() {
+        Board.Builder boardBuilder = new Board.Builder();
+        boardBuilder.setPiece(new Knight(12, Side.BLACK));
+        Board board = boardBuilder.build();
+        Collection<Move> moves = board.getTile(12).getPiece().getLegalMoves(board);
+        assertTrue(moves.size() == 6);
     }
     
     @Test

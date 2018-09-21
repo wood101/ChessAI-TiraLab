@@ -5,10 +5,8 @@
  */
 package fi.helsinki.chessai.board.pieces;
 
-import com.google.common.collect.ImmutableList;
+import fi.helsinki.chessai.Side;
 import fi.helsinki.chessai.board.Board;
-import fi.helsinki.chessai.board.BoardUtil;
-import fi.helsinki.chessai.board.Tile;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -25,7 +23,7 @@ public class Pawn extends Piece{
      * @param pieceSide The colour of the piece
      */
     public Pawn(final int position, final Side pieceSide) {
-        super(position, pieceSide);
+        super(PieceType.PAWN, position, pieceSide);
     }
     
     /**
@@ -43,7 +41,7 @@ public class Pawn extends Piece{
             if(PieceUtil.isOutOfBounds(this.position, pieceDestination, 1)) {
                 continue;
             }           
-            if(BoardUtil.isValidTile(pieceDestination)) {
+            if(PieceUtil.isValidTile(pieceDestination)) {
                 continue;
             }    
             if(offset == 8 && !board.getTile(pieceDestination).occupied()){
@@ -57,7 +55,12 @@ public class Pawn extends Piece{
                 legalMoves.add(new Move.AttackMove(board, this, pieceDestination, this));
             }
         }
-        return ImmutableList.copyOf(legalMoves);
+        return legalMoves;
+    }
+    
+    @Override
+    public Pawn movePiece(final Move move) {
+        return new Pawn(move.getDestination(), move.getMovedPiece().getPieceSide());
     }
     
         @Override

@@ -1,6 +1,5 @@
 package fi.helsinki.chessai.board;
 
-import com.google.common.collect.ImmutableMap;
 import fi.helsinki.chessai.board.pieces.Piece;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,10 +13,10 @@ public abstract class Tile {
     private static final Map<Integer, EmptyTile> EmptyTiles = setAllEmptyTiles();
     private static Map<Integer, EmptyTile> setAllEmptyTiles() {
         final Map<Integer, EmptyTile> emptyTileMap = new HashMap<>();
-        for(int i = 0; i <= BoardUtil.NumTiles; i++) {
+        for(int i = 0; i <= 64; i++) {
             emptyTileMap.put(i, new EmptyTile(i));
         }
-        return ImmutableMap.copyOf(emptyTileMap);
+        return emptyTileMap;
     }
     /**
      * Makes a new tile.
@@ -51,6 +50,13 @@ public abstract class Tile {
      */
     public abstract Piece getPiece();
     
+    /**
+     * Return the coordinate of the tile.
+     * @return 
+     */
+    public int getTileCoordinate() {
+        return this.tileCoordinate;
+    }
 
     /**
      * Class for an empty tile

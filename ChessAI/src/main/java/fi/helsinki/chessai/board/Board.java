@@ -5,9 +5,13 @@
  */
 package fi.helsinki.chessai.board;
 
-import com.google.common.collect.ImmutableList;
+import fi.helsinki.chessai.Side;
 import fi.helsinki.chessai.board.pieces.*;
+import fi.helsinki.chessai.player.BlackPlayer;
+import fi.helsinki.chessai.player.Player;
+import fi.helsinki.chessai.player.WhitePlayer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -17,22 +21,29 @@ import java.util.Map;
  * The class for the chessboard.
  * @author janne
  */
-public class Board {
+public final class Board {
     private final List<Tile> gameboard;
     private final Collection<Piece> whitePieces;
     private final Collection<Piece> blackPieces;
+    private final WhitePlayer whitePlayer;
+    private final BlackPlayer blackPlayer;
+    private final Player currentPlayer;
     
     /**
      * Constructor
      * @param builder 
      */
-    private Board(Builder builder) {
+    private Board(final Builder builder) {
     this.gameboard = createBoard(builder);
     this.whitePieces = activePieces(this.gameboard, Side.WHITE);
     this.blackPieces = activePieces(this.gameboard, Side.BLACK);
-    
-    final Collection<Move> whiteLegalMoves = legalMoves(this.whitePieces);
-    final Collection<Move> blackLegalMoves = legalMoves(this.blackPieces);
+    final Collection<Move> whiteLegalMoves = legalMovesForPieces(this.whitePieces);
+    final Collection<Move> blackLegalMoves = legalMovesForPieces(this.blackPieces);
+    this.whitePlayer = new WhitePlayer(this, whiteLegalMoves, blackLegalMoves);
+    this.blackPlayer = new BlackPlayer(this, whiteLegalMoves, blackLegalMoves);
+    //Not done
+    //this.currentPlayer = builder.nextMoveMaker.choosePlayer(this.whitePlayer, this.blackPlayer);
+    this.currentPlayer = whitePlayer;
     }
     
     /**
@@ -50,11 +61,11 @@ public class Board {
      * @return List of tiles
      */
     private static List<Tile> createBoard(final Builder builder) {
-        final Tile[] tiles = new Tile[BoardUtil.NumTiles];
-        for (int i = 0; i < BoardUtil.NumTiles; i++) {
+        final Tile[] tiles = new Tile[64];
+        for (int i = 0; i < 64; i++) {
             tiles[i] = Tile.createTile(i, builder.boardConfig.get(i));
         }
-        return ImmutableList.copyOf(tiles);
+        return Arrays.asList(tiles);
     }
     
     /**
@@ -81,14 +92,12 @@ public class Board {
         builder.setPiece(new Knight(57, Side.WHITE));
         builder.setPiece(new Knight(62, Side.WHITE));
         builder.setPiece(new Rook(56, Side.WHITE));
-        builder.setPiece(new Rook(63, Side.WHITE));
+        builder.setPiece(new Rook(64, Side.WHITE));
         builder.setPiece(new Bishop(61, Side.WHITE));
         builder.setPiece(new Bishop(58, Side.WHITE));
         for(int i = 48; i <= 55; i++) {
             builder.setPiece(new Pawn(i, Side.WHITE));
         }
-        
-        
         builder.setMoveMaker(Side.WHITE);
         return builder.build();
     }
@@ -99,7 +108,7 @@ public class Board {
      * @param side 
      * @return 
      */
-    private Collection<Piece> activePieces(final List<Tile> gameboard, final Side side) {
+    public Collection<Piece> activePieces(final List<Tile> gameboard, final Side side) {
         final List<Piece> activePieces = new ArrayList<>();
         
         for(final Tile tile : gameboard) {
@@ -110,7 +119,23 @@ public class Board {
                 }
             }
         }
-        return ImmutableList.copyOf(activePieces);
+        return activePieces;
+    }
+    
+    /**
+     * Returns all black pieces
+     * @return 
+     */
+    public Collection<Piece> getBlackPieces() {
+        return this.blackPieces;
+    }
+    
+    /**
+     * Returns all white pieces
+     * @return 
+     */
+    public Collection<Piece> getWhitePieces() {
+        return this.whitePieces;
     }
     
     /**
@@ -118,13 +143,39 @@ public class Board {
      * @param pieces
      * @return 
      */
-    private Collection<Move> legalMoves(Collection<Piece> pieces) {
+    private Collection<Move> legalMovesForPieces(Collection<Piece> pieces) {
         final List<Move> legalMoves = new ArrayList<>();    
         for (final Piece piece : pieces) {
             legalMoves.addAll(piece.getLegalMoves(this));
         }
-        return ImmutableList.copyOf(legalMoves);
+        return legalMoves;
     }
+
+    /**
+     * Returns the white player.
+     * @return 
+     */
+    public Player getWhitePlayer() {
+        return this.whitePlayer;
+    }
+    
+    /**
+     * Returns the black player.
+     * @return 
+     */
+    public Player getBlackPlayer() {
+        return this.blackPlayer;
+    }
+
+    /**
+     * Returns the player whose turn it is.
+     * @return 
+     */
+    public Player currentPlayer() {
+        return this.currentPlayer;
+    }
+
+
     
     /**
      * Class to build the chessboard.
@@ -169,7 +220,7 @@ public class Board {
     @Override
     public String toString() {
         final StringBuilder builder = new StringBuilder();
-        for(int i = 0; i < BoardUtil.NumTiles; i++) {
+        for(int i = 0; i < 64; i++) {
             final String tileText = this.gameboard.get(i).toString();
             builder.append(String.format("%3s", tileText));
             if((i + 1) % 8 == 0) {

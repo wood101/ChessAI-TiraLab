@@ -5,9 +5,8 @@
  */
 package fi.helsinki.chessai.board.pieces;
 
-import com.google.common.collect.ImmutableList;
+import fi.helsinki.chessai.Side;
 import fi.helsinki.chessai.board.Board;
-import fi.helsinki.chessai.board.BoardUtil;
 import fi.helsinki.chessai.board.Tile;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -39,6 +38,15 @@ public class PieceUtil {
     }
     
     /**
+     * Checks if the tile exists on the board.
+     * @param coordinate coordinate of the tile
+     * @return True if it does, false if it doesn't
+     */
+    public static boolean isValidTile(int coordinate) {
+        return coordinate >= 0 && coordinate < 64;
+    }    
+    
+    /**
      * Gets the legal moves for all pieces that move according to a vector.
      * @param board current playing board
      * @param piece the piece that move list is generated for
@@ -49,7 +57,7 @@ public class PieceUtil {
         final List<Move> legalMoves = new ArrayList<>();
         for(final int offset : vectors) {
             int pieceDestination = piece.position + offset;
-            while(BoardUtil.isValidTile(pieceDestination) && !PieceUtil.isOutOfBounds(pieceDestination - offset, pieceDestination, 1)) {
+            while(isValidTile(pieceDestination) && !PieceUtil.isOutOfBounds(pieceDestination - offset, pieceDestination, 1)) {
                     final Tile destinationTile = board.getTile(pieceDestination);
                     if(!destinationTile.occupied()) {
                         legalMoves.add(new Move.RegularMove(board, piece, pieceDestination));
@@ -64,6 +72,8 @@ public class PieceUtil {
                 pieceDestination += offset;
             }
         }
-        return ImmutableList.copyOf(legalMoves);
+        return legalMoves;
     }
+
+
 }

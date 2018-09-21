@@ -5,9 +5,8 @@
  */
 package fi.helsinki.chessai.board.pieces;
 
-import com.google.common.collect.ImmutableList;
+import fi.helsinki.chessai.Side;
 import fi.helsinki.chessai.board.Board;
-import fi.helsinki.chessai.board.BoardUtil;
 import fi.helsinki.chessai.board.Tile;
 import fi.helsinki.chessai.board.pieces.Move.*;
 import java.util.ArrayList;
@@ -26,7 +25,7 @@ public class Knight extends Piece {
      * @param pieceSide The colour of the piece
      */
     public Knight(final int position, final Side pieceSide) {
-        super(position, pieceSide);
+        super(PieceType.KNIGHT, position, pieceSide);
     }
     
     /**
@@ -41,7 +40,7 @@ public class Knight extends Piece {
         
         for(final int offset : PossibleMoves) {
             pieceDestination = this.position + offset;    
-            if(BoardUtil.isValidTile(pieceDestination) && !PieceUtil.isOutOfBounds(this.position, pieceDestination, 2)) {
+            if(PieceUtil.isValidTile(pieceDestination) && !PieceUtil.isOutOfBounds(this.position, pieceDestination, 2)) {
                 
                 final Tile destinationTile = board.getTile(pieceDestination);
                 
@@ -55,10 +54,15 @@ public class Knight extends Piece {
                 }
             }
         }
-        return ImmutableList.copyOf(legalMoves);
+        return legalMoves;
     }
     
-        @Override
+    @Override
+    public Knight movePiece(final Move move) {
+        return new Knight(move.getDestination(), move.getMovedPiece().getPieceSide());
+    }    
+    
+    @Override
     public String toString() {
         return PieceType.KNIGHT.toString();
     }

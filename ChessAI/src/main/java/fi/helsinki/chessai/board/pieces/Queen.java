@@ -5,6 +5,7 @@
  */
 package fi.helsinki.chessai.board.pieces;
 
+import fi.helsinki.chessai.Side;
 import fi.helsinki.chessai.board.Board;
 import java.util.Collection;
 
@@ -21,7 +22,7 @@ public class Queen extends Piece{
      * @param pieceSide The colour of the piece
      */
     public Queen (final int position, final Side pieceSide) {
-        super(position, pieceSide);
+        super(PieceType.QUEEN, position, pieceSide);
     }
     
     /**
@@ -29,13 +30,17 @@ public class Queen extends Piece{
      * @param board
      * @return 
      */
-    
-        @Override
+    @Override
     public Collection<Move> getLegalMoves(Board board) {
         return PieceUtil.getLegalVectorMoves(board, this, PossibleMoveVectors);    
     }
     
-        @Override
+    @Override
+    public Queen movePiece(final Move move) {
+        return new Queen(move.getDestination(), move.getMovedPiece().getPieceSide());
+    }
+    
+    @Override
     public String toString() {
         return PieceType.QUEEN.toString();
     }

@@ -1,4 +1,8 @@
-package fi.helsinki.chessai.board.pieces;
+package fi.helsinki.chessai;
+
+import fi.helsinki.chessai.player.BlackPlayer;
+import fi.helsinki.chessai.player.Player;
+import fi.helsinki.chessai.player.WhitePlayer;
 
 /**
  * Enum for the different sides of the pieces in chess.
@@ -20,6 +24,11 @@ public enum Side {
         public boolean isBlack() {
             return false;
         }
+
+        @Override
+        public Player choosePlayer(final WhitePlayer whitePlayer, final BlackPlayer blackPlayer) {
+            return whitePlayer;
+        }
     },
     BLACK {
         @Override
@@ -35,6 +44,11 @@ public enum Side {
         @Override
         public boolean isBlack() {
             return true;
+        }
+
+        @Override
+        public Player choosePlayer(final WhitePlayer whitePlayer, final BlackPlayer blackPlayer) {
+            return blackPlayer;
         }
     };
     
@@ -55,4 +69,12 @@ public enum Side {
      * @return 
      */
     public abstract boolean isBlack();
+
+    /**
+     * Chooses the next player after a move.
+     * @param whitePlayer
+     * @param blackPlayer
+     * @return 
+     */
+    public abstract Player choosePlayer(WhitePlayer whitePlayer, BlackPlayer blackPlayer);
 }

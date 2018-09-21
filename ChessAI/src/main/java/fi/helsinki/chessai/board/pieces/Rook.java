@@ -5,6 +5,7 @@
  */
 package fi.helsinki.chessai.board.pieces;
 
+import fi.helsinki.chessai.Side;
 import fi.helsinki.chessai.board.Board;
 import java.util.Collection;
 
@@ -21,7 +22,7 @@ public class Rook extends Piece{
      * @param pieceSide The colour of the piece
      */
     public Rook (final int position, final Side pieceSide) {
-        super(position, pieceSide);
+        super(PieceType.ROOK, position, pieceSide);
     }
     
     /**
@@ -29,12 +30,17 @@ public class Rook extends Piece{
      * @param board
      * @return 
      */
-        @Override
+    @Override
     public Collection<Move> getLegalMoves(Board board) {
         return PieceUtil.getLegalVectorMoves(board, this, PossibleMoveVectors);    
     }
+
+    @Override
+    public Rook movePiece(final Move move) {
+        return new Rook(move.getDestination(), move.getMovedPiece().getPieceSide());
+    }
     
-        @Override
+    @Override
     public String toString() {
         return PieceType.ROOK.toString();
     }
