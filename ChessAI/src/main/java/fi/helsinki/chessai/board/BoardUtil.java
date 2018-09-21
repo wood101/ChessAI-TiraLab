@@ -25,6 +25,6 @@ public class BoardUtil {
      * @return True if it does, false if it doesn't
      */
     public static boolean isValidTile(int coordinate) {
-        return coordinate >=0 && coordinate < 64;
+        return coordinate >= 0 && coordinate < 64;
     }
 }

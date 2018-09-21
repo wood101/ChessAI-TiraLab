@@ -21,8 +21,8 @@ public class King extends Piece{
     
     /**
      * Constructor
-     * @param position
-     * @param pieceSide 
+     * @param position the position of the piece on the board
+     * @param pieceSide The colour of the piece
      */
     public King(final int position, final Side pieceSide) {
         super(position, pieceSide);

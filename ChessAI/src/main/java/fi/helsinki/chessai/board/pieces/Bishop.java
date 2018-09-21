@@ -12,16 +12,11 @@ public class Bishop extends Piece {
     
     /**
      * Constructor
-     * @param position the piece's position on the board
-     * @param pieceSide 
+     * @param position the position of the piece on the board
+     * @param pieceSide The colour of the piece
      */
     public Bishop (final int position, final Side pieceSide) {
         super(position, pieceSide);
-    }
-    
-    @Override
-    public String toString() {
-        return PieceType.BISHOP.toString();
     }
     
     /**
@@ -32,5 +27,10 @@ public class Bishop extends Piece {
     @Override
     public Collection<Move> getLegalMoves(Board board) {
         return PieceUtil.getLegalVectorMoves(board, this, PossibleMoveVectors);    
+    }
+    
+    @Override
+    public String toString() {
+        return PieceType.BISHOP.toString();
     }
 }

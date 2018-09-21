@@ -18,20 +18,64 @@ public class PieceTest {
     
     @Test
     public void TestMoveListForKnight() {
-    Board.Builder boardBuilder = new Board.Builder();
-    boardBuilder.setPiece(new Knight(12, Side.BLACK));
-    Board board = boardBuilder.build();
-    Collection<Move> moves = board.getTile(12).getPiece().getLegalMoves(board);
-    assertTrue(moves.size() == 6);
+        Board.Builder boardBuilder = new Board.Builder();
+        boardBuilder.setPiece(new Knight(12, Side.BLACK));
+        Board board = boardBuilder.build();
+        Collection<Move> moves = board.getTile(12).getPiece().getLegalMoves(board);
+        assertTrue(moves.size() == 6);
     }
 
     @Test
     public void TestMoveListForBishop() {
-    Board.Builder boardBuilder = new Board.Builder();
-    boardBuilder.setPiece(new Bishop(8, Side.BLACK));
-    Board board = boardBuilder.build();
-    Collection<Move> moves = board.getTile(8).getPiece().getLegalMoves(board);
-    System.out.println(moves.size());
-    assertTrue(moves.size() == 7);
+        Board.Builder boardBuilder = new Board.Builder();
+        boardBuilder.setPiece(new Bishop(12, Side.BLACK));
+        Board board = boardBuilder.build();
+        Collection<Move> moves = board.getTile(12).getPiece().getLegalMoves(board);
+        assertTrue(moves.size() == 9);
     }
+
+    @Test
+    public void TestMoveListForRook() {
+        Board.Builder boardBuilder = new Board.Builder();
+        boardBuilder.setPiece(new Rook(12, Side.BLACK));
+        Board board = boardBuilder.build();
+        Collection<Move> moves = board.getTile(12).getPiece().getLegalMoves(board);
+        assertTrue(moves.size() == 14);
+    }
+    
+    @Test
+    public void TestMoveListForQueen() {
+        Board.Builder boardBuilder = new Board.Builder();
+        boardBuilder.setPiece(new Queen(12, Side.BLACK));
+        Board board = boardBuilder.build();
+        Collection<Move> moves = board.getTile(12).getPiece().getLegalMoves(board);
+        assertTrue(moves.size() == 23);
+    }
+    
+    @Test
+    public void TestMoveListForKing() {
+        Board.Builder boardBuilder = new Board.Builder();
+        boardBuilder.setPiece(new King(26, Side.WHITE));
+        Board board = boardBuilder.build();
+        Collection<Move> moves = board.getTile(26).getPiece().getLegalMoves(board);
+        assertTrue(moves.size() == 8);
+    }
+    
+    @Test
+    public void TestBottomRightCornerMoves() {
+        Board.Builder boardBuilder = new Board.Builder();
+        boardBuilder.setPiece(new King(63, Side.WHITE));
+        Board board = boardBuilder.build();
+        Collection<Move> moves = board.getTile(63).getPiece().getLegalMoves(board);
+        assertTrue(moves.size() == 3);
+    }
+
+    @Test
+    public void TestTopLeftCornerMoves() {
+        Board.Builder boardBuilder = new Board.Builder();
+        boardBuilder.setPiece(new King(0, Side.WHITE));
+        Board board = boardBuilder.build();
+        Collection<Move> moves = board.getTile(0).getPiece().getLegalMoves(board);
+        assertTrue(moves.size() == 3);
+    }       
 }

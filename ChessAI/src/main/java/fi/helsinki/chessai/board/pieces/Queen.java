@@ -13,12 +13,12 @@ import java.util.Collection;
  * @author janne
  */
 public class Queen extends Piece{
-        private final static int[] PossibleMoveVectors = {-9, -8, -7 -1, 1, 7, 8, 9};
+        private final static int[] PossibleMoveVectors = {-8, -1, 1, 8, -9, -7, 7, 9};
     
     /**
      * Constructor
-     * @param position
-     * @param pieceSide 
+     * @param position the position of the piece on the board
+     * @param pieceSide The colour of the piece
      */
     public Queen (final int position, final Side pieceSide) {
         super(position, pieceSide);
