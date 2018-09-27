@@ -37,21 +37,20 @@ public abstract class Player {
      */
     Player(final Board board, final Collection<Move> legalMoves, final Collection<Move> opponentMoves) {
         this.board = board;
-        //this.playerKing = establishKing();
-        this.playerKing = new King(0, Side.BLACK);
+        this.playerKing = establishKing();
         this.legalMoves = MoveCombiner.combineMoves(legalMoves, kingCastles(legalMoves, opponentMoves));
         this.isInCheck = !Player.attacksOnTile(this.playerKing.getPosition(), opponentMoves).isEmpty();
         
     }
-    //Breaks testing atm
-    /*private King establishKing() {
+    private King establishKing() {
         for(final Piece piece : getActivePieces()) {
             if(piece.getPieceType() == PieceType.KING) {
                 return (King) piece;
             }
         }
-        throw new RuntimeException("Game doesn't function without a king");
-    }*/
+        //throw new RuntimeException("Game doesn't function without a king");
+        return new King(0, Side.BLACK);
+    }
     
     public King getPlayersKing() {
         return this.playerKing;

@@ -306,8 +306,8 @@ public abstract class Move {
          * @return
          */
         public static Move createMove(final Board board, final int currentCoordinate, final int destinationCoordinate) {
-            for(Move move : MoveCombiner.combineMoves(board.currentPlayer().getLegalMoves(), board.currentPlayer().getOpponent().getLegalMoves())) {
-                if(move.getCurrentPosition() == destinationCoordinate && move.getDestination() == destinationCoordinate) {
+            for(Move move : board.getAllLegalMoves()) {
+                if(move.getCurrentPosition() == currentCoordinate && move.getDestination() == destinationCoordinate) {
                     return move;
                 }
             }

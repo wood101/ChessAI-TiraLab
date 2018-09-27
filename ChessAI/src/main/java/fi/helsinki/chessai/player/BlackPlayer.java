@@ -21,7 +21,7 @@ import java.util.List;
  */
 public class BlackPlayer extends Player {
     
-    public BlackPlayer(Board board, Collection<Move> whiteLegalMoves, Collection<Move> blackLegalMoves) {
+    public BlackPlayer(Board board, Collection<Move> blackLegalMoves, Collection<Move> whiteLegalMoves) {
         super(board, blackLegalMoves, whiteLegalMoves);
     }
 

@@ -1,21 +1,24 @@
 package fi.helsinki.chessai.gui;
 
 import fi.helsinki.chessai.board.Board;
+import fi.helsinki.chessai.board.MoveTransition;
+import fi.helsinki.chessai.board.Tile;
+import fi.helsinki.chessai.board.pieces.Move;
+import fi.helsinki.chessai.board.pieces.Piece;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
-import java.awt.PopupMenu;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -24,6 +27,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 /**
  * This class creates a visible table to play on.
@@ -32,12 +36,15 @@ import javax.swing.JPanel;
 public class Table {
     private final JFrame frame;
     private final BoardPanel panel;
-    private final Board chessBoard;
+    private Board chessBoard;
+    private Tile sourceTile;
+    private Tile destinationTile;
+    private Piece humanMovedPiece;
     private final static Dimension FRAME = new Dimension(600, 600);
     private final static Dimension BOARD_PANEL = new Dimension(400, 350);
     private final static Dimension TILE_PANEL = new Dimension(10, 10);
-    private Color lightTileColor = Color.decode("#FFFACD");
-    private Color darkTileColor = Color.decode("#593E1A");
+    private final Color lightTileColor = Color.decode("#FFFACD");
+    private final Color darkTileColor = Color.decode("#593E1A");
     /**
      * Constructor
      */
@@ -95,6 +102,16 @@ public class Table {
             setPreferredSize(BOARD_PANEL);
             validate();
         }
+
+        private void drawBoard(Board board) {
+            removeAll();
+            for(final TilePanel tilePanel : boardTiles) {
+                tilePanel.drawTile(board);
+                add(tilePanel);
+            }
+            validate();
+            repaint();
+        }
     }
     
     private class TilePanel extends JPanel {
@@ -105,7 +122,64 @@ public class Table {
             setPreferredSize(TILE_PANEL);
             assignTileColor();
             assignTilePieceIcon(chessBoard);
+            
+            addMouseListener(new MouseListener() {
+                @Override
+                public void mouseClicked(final MouseEvent me) {
+                    if(isRightMouseButton(me)) {
+                        clearState();
+                    } else if(isLeftMouseButton(me))
+                        if(sourceTile == null) {
+                            sourceTile = chessBoard.getTile(tileId);
+                            humanMovedPiece = sourceTile.getPiece();
+                            if(humanMovedPiece == null) {
+                                sourceTile = null;
+                            }
+                        } else {
+                            destinationTile = chessBoard.getTile(tileId);
+                            final Move move = Move.MoveFactory.createMove(chessBoard, sourceTile.getTileCoordinate(), destinationTile.getTileCoordinate());
+                            final MoveTransition transition = chessBoard.currentPlayer().makeMove(move);
+                            if(transition.getMoveStatus().isDone()) {
+                                chessBoard = (Board) transition.getBoard();
+                            }
+                        clearState();
+                        }
+                    SwingUtilities.invokeLater(() -> {
+                        panel.drawBoard(chessBoard);
+                    });
+                }
+
+                @Override
+                public void mousePressed(final MouseEvent me) {
+                }
+
+                @Override
+                public void mouseReleased(final MouseEvent me) {
+                }
+
+                @Override
+                public void mouseEntered(final MouseEvent me) {
+                }
+
+                @Override
+                public void mouseExited(final MouseEvent me) {
+                }
+
+                private boolean isRightMouseButton(MouseEvent me) {
+                    return me.getButton() == MouseEvent.BUTTON3;
+                }
+
+                private boolean isLeftMouseButton(MouseEvent me) {
+                    return me.getButton() == MouseEvent.BUTTON1;
+                }
+            });
             validate();
+        }
+        
+        private void clearState() {
+            sourceTile = null;
+            destinationTile = null;
+            humanMovedPiece = null;
         }
         
         private void assignTilePieceIcon(final Board board) {
@@ -127,6 +201,13 @@ public class Table {
             } else {
                 setBackground(this.tileId % 2 == 0 ? lightTileColor : darkTileColor);
             }
+        }
+
+        public void drawTile(final Board board) {
+            assignTileColor();
+            assignTilePieceIcon(board);
+            validate();
+            repaint();
         }
     }
 }

@@ -10,6 +10,7 @@ import fi.helsinki.chessai.board.pieces.*;
 import fi.helsinki.chessai.player.BlackPlayer;
 import fi.helsinki.chessai.player.Player;
 import fi.helsinki.chessai.player.WhitePlayer;
+import fi.helsinki.chessai.utility.MoveCombiner;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -139,6 +140,14 @@ public final class Board {
     }
     
     /**
+     * Gives all moves on the board.
+     * @return 
+     */
+    public Collection<Move> getAllLegalMoves() {
+        return MoveCombiner.combineMoves(this.whitePlayer.getLegalMoves(), this.blackPlayer.getLegalMoves());
+    }    
+    
+    /**
      * Gives the list of possible legal moves.
      * @param pieces
      * @return 
@@ -175,8 +184,6 @@ public final class Board {
         return this.currentPlayer;
     }
 
-
-    
     /**
      * Class to build the chessboard.
      */
