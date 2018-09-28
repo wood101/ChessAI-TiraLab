@@ -23,7 +23,8 @@ import java.util.List;
 public class WhitePlayer extends Player {
     
     public WhitePlayer(Board board, Collection<Move> whiteLegalMoves, Collection<Move> blackLegalMoves) {
-        super(board, blackLegalMoves, whiteLegalMoves);
+        super(board, whiteLegalMoves, blackLegalMoves);
+        
     }
 
     @Override

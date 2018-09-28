@@ -98,19 +98,20 @@ public abstract class Move {
      * @return 
      */
     public Board Execute() {
-            final Builder builder = new Builder();
-            for(final Piece piece : this.board.currentPlayer().getActivePieces()) {
-                if(!this.movedPiece.equals(piece)) {
-                    builder.setPiece(piece);
-                }
-            }
-            for(final Piece piece : this.board.currentPlayer().getOpponent().getActivePieces()) {
+        final Builder builder = new Builder();
+        for(final Piece piece : this.board.currentPlayer().getActivePieces()) {
+            if(!this.movedPiece.equals(piece)) {
                 builder.setPiece(piece);
             }
-            builder.setPiece(this.movedPiece.movePiece(this));
-            builder.setMoveMaker(this.board.currentPlayer().getOpponent().getSide());
-            return builder.build();
         }
+        for(final Piece piece : this.board.currentPlayer().getOpponent().getActivePieces()) {
+            builder.setPiece(piece);
+        }
+        builder.setPiece(this.movedPiece.movePiece(this));
+        builder.setMoveMaker(this.board.currentPlayer().getOpponent().getSide());
+        builder.setMoveTransition(this);
+        return builder.build();
+    }
     
     /**
      * Normal movement of chess pieces.
@@ -118,11 +119,6 @@ public abstract class Move {
     public static final class RegularMove extends Move {
         public RegularMove(Board board, Piece movedPiece, int destinationCoordinate) {
             super(board, movedPiece, destinationCoordinate);
-        }
-
-        @Override
-        public Board Execute() {
-            return null;
         }
     }
     
@@ -134,11 +130,6 @@ public abstract class Move {
         public AttackMove(Board board, Piece movedPiece, int destinationCoordinate, final Piece attackedPiece) {      
             super(board, movedPiece, destinationCoordinate);
             this.attackedPiece = attackedPiece;
-        }
-
-        @Override
-        public Board Execute() {
-            return null;
         }
         
         @Override
@@ -218,6 +209,7 @@ public abstract class Move {
             /*To be solved
             builder.setEnPassantPawn(movedPawn);*/
             builder.setMoveMaker(this.board.currentPlayer().getOpponent().getSide());
+            builder.setMoveTransition(this);
             return builder.build();
         }
     }    
@@ -260,6 +252,7 @@ public abstract class Move {
             builder.setPiece(this.movedPiece.movePiece(this));
             builder.setPiece(new Rook(this.rookDestination, this.rook.getPieceSide()));
             builder.setMoveMaker(this.board.currentPlayer().getOpponent().getSide());
+            builder.setMoveTransition(this);
             return builder.build();
         } 
     }

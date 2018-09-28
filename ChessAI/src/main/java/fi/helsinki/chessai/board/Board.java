@@ -41,7 +41,7 @@ public final class Board {
     final Collection<Move> whiteLegalMoves = legalMovesForPieces(this.whitePieces);
     final Collection<Move> blackLegalMoves = legalMovesForPieces(this.blackPieces);
     this.whitePlayer = new WhitePlayer(this, whiteLegalMoves, blackLegalMoves);
-    this.blackPlayer = new BlackPlayer(this, whiteLegalMoves, blackLegalMoves);
+    this.blackPlayer = new BlackPlayer(this, blackLegalMoves, whiteLegalMoves);
     //Not done
     //this.currentPlayer = builder.nextMoveMaker.choosePlayer(this.whitePlayer, this.blackPlayer);
     this.currentPlayer = whitePlayer;
@@ -57,7 +57,7 @@ public final class Board {
     }
     
     /**
-     * Creates the gameboard of out tiles.
+     * Creates the game board of out tiles.
      * @param builder
      * @return List of tiles
      */
@@ -70,8 +70,8 @@ public final class Board {
     }
     
     /**
-     * Creates the standard chess gameboard with the pieces.
-     * @return the gameboard
+     * Creates the standard chess game board with the pieces.
+     * @return the game board
      */
     public static Board createStandardBoard() {
         final Builder builder = new Builder();
@@ -104,7 +104,7 @@ public final class Board {
     }
     
     /**
-     * Lists the pieces currently on the gameboard.
+     * Lists the pieces currently on the game board.
      * @param gameboard 
      * @param side 
      * @return 
@@ -191,12 +191,13 @@ public final class Board {
         
         Map<Integer, Piece> boardConfig;
         Side nextMoveMaker;
+        Move transitionMove;
         
         public Builder() {
             this.boardConfig = new HashMap<>();
         }
         /**
-         * Place a piece on the gameboard.
+         * Place a piece on the game board.
          * @param piece the piece to be placed
          * @return 
          */
@@ -206,7 +207,7 @@ public final class Board {
         }
         
         /**
-         * Sets whose turn it is at the beginning of the game.
+         * Sets whose turn it is at the moment.
          * @param nextMoveMaker
          * @return 
          */
@@ -214,6 +215,11 @@ public final class Board {
             this.nextMoveMaker = nextMoveMaker;
             return this;
         }
+        
+        public Builder setMoveTransition(final Move transitionMove) {
+            this.transitionMove = transitionMove;
+            return this;
+}
         
         public Board build() {
             return new Board(this);

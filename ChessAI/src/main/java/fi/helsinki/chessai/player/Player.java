@@ -67,7 +67,7 @@ public abstract class Player {
      * @return 
      */
     public static Collection<Move> attacksOnTile(int position, Collection<Move> moves) {
-        final List<Move> attackMoves = new ArrayList<>();
+        final Collection<Move> attackMoves = new ArrayList<>();
         for(final Move move : moves) {
             if(position == move.getDestination()) {
                 attackMoves.add(move);

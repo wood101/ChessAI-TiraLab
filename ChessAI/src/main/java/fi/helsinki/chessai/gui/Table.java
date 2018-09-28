@@ -57,12 +57,13 @@ public class Table {
         this.chessBoard = Board.createStandardBoard();
         this.panel = new BoardPanel();
         this.frame.add(panel, BorderLayout.CENTER);
+        this.frame.setLocationRelativeTo(null);
         this.frame.setVisible(true);
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
     
     /**
-     * Populates the menubar with things.
+     * Populates the menu bar with things.
      * @param menu 
      */
     private JMenuBar createMenu() {
