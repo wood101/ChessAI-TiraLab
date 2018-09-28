@@ -5,9 +5,11 @@
  */
 package fi.helsinki.chessai.board.pieces;
 
+import fi.helsinki.chessai.utility.PieceUtil;
+import fi.helsinki.chessai.board.Move;
 import fi.helsinki.chessai.Side;
 import fi.helsinki.chessai.board.Board;
-import java.util.Collection;
+import fi.helsinki.chessai.utility.MyList;
 
 /**
  * The class for the queen piece
@@ -20,9 +22,10 @@ public class Queen extends Piece{
      * Constructor
      * @param position the position of the piece on the board
      * @param pieceSide The colour of the piece
+     * @param firstMove
      */
-    public Queen (final int position, final Side pieceSide) {
-        super(PieceType.QUEEN, position, pieceSide);
+    public Queen (final int position, final Side pieceSide, final boolean firstMove) {
+        super(PieceType.QUEEN, position, pieceSide, firstMove);
     }
     
     /**
@@ -31,13 +34,13 @@ public class Queen extends Piece{
      * @return 
      */
     @Override
-    public Collection<Move> getLegalMoves(Board board) {
+    public MyList<Move> getLegalMoves(Board board) {
         return PieceUtil.getLegalVectorMoves(board, this, PossibleMoveVectors);    
     }
     
     @Override
     public Queen movePiece(final Move move) {
-        return new Queen(move.getDestination(), move.getMovedPiece().getPieceSide());
+        return new Queen(move.getDestination(), move.getMovedPiece().getPieceSide(), move.getMovedPiece().isFirstMove());
     }
     
     @Override

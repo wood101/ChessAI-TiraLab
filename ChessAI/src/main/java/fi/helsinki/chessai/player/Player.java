@@ -10,13 +10,10 @@ import fi.helsinki.chessai.Side;
 import fi.helsinki.chessai.board.Board;
 import fi.helsinki.chessai.board.MoveStatus;
 import fi.helsinki.chessai.board.pieces.King;
-import fi.helsinki.chessai.board.pieces.Move;
+import fi.helsinki.chessai.board.Move;
 import fi.helsinki.chessai.board.pieces.Piece;
 import fi.helsinki.chessai.board.pieces.Piece.PieceType;
-import fi.helsinki.chessai.utility.MoveCombiner;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import fi.helsinki.chessai.utility.MyList;
 
 /**
  * Class for the players of the game.
@@ -26,7 +23,7 @@ public abstract class Player {
     
     protected final Board board;
     protected final King playerKing;
-    protected final Collection<Move> legalMoves;
+    protected final MyList<Move> legalMoves;
     private final boolean isInCheck;
     
     /**
@@ -35,10 +32,11 @@ public abstract class Player {
      * @param legalMoves legal moves for the current player
      * @param opponentMoves legal moves of the opponent of the current player
      */
-    Player(final Board board, final Collection<Move> legalMoves, final Collection<Move> opponentMoves) {
+    Player(final Board board, final MyList<Move> legalMoves, final MyList<Move> opponentMoves) {
         this.board = board;
         this.playerKing = establishKing();
-        this.legalMoves = MoveCombiner.combineMoves(legalMoves, kingCastles(legalMoves, opponentMoves));
+        legalMoves.addAll(kingCastles(legalMoves, opponentMoves));
+        this.legalMoves = legalMoves;
         this.isInCheck = !Player.attacksOnTile(this.playerKing.getPosition(), opponentMoves).isEmpty();
         
     }
@@ -49,14 +47,14 @@ public abstract class Player {
             }
         }
         //throw new RuntimeException("Game doesn't function without a king");
-        return new King(0, Side.BLACK);
+        return new King(0, Side.BLACK, true);
     }
     
     public King getPlayersKing() {
         return this.playerKing;
     }
     
-    public Collection<Move> getLegalMoves() {
+    public MyList<Move> getLegalMoves() {
         return this.legalMoves;
     }
     
@@ -66,8 +64,8 @@ public abstract class Player {
      * @param moves
      * @return 
      */
-    public static Collection<Move> attacksOnTile(int position, Collection<Move> moves) {
-        final Collection<Move> attackMoves = new ArrayList<>();
+    public static MyList<Move> attacksOnTile(int position, MyList<Move> moves) {
+        final MyList<Move> attackMoves = new MyList<>();
         for(final Move move : moves) {
             if(position == move.getDestination()) {
                 attackMoves.add(move);
@@ -140,8 +138,8 @@ public abstract class Player {
         if(!isLegalMove(move)) {
             return new MoveTransition(this.board, move, MoveStatus.ILLEGAL_MOVE);
         }
-        final Board transitionBoard = move.Execute();
-        final Collection<Move> kingAttacks = Player.attacksOnTile(transitionBoard.currentPlayer().getOpponent().getPlayersKing().getPosition(), transitionBoard.currentPlayer().getLegalMoves());
+        final Board transitionBoard = move.execute();
+        final MyList<Move> kingAttacks = Player.attacksOnTile(transitionBoard.currentPlayer().getPlayersKing().getPosition(), transitionBoard.currentPlayer().getOpponent().getLegalMoves());
         if(!kingAttacks.isEmpty()) {
             return new MoveTransition(this.board, move, MoveStatus.INCHECK);
         }
@@ -149,7 +147,7 @@ public abstract class Player {
     }
     
     
-    public abstract Collection<Piece> getActivePieces();
+    public abstract MyList<Piece> getActivePieces();
     public abstract Side getSide();
     public abstract Player getOpponent();
     
@@ -159,7 +157,7 @@ public abstract class Player {
      * @param opponentMoves
      * @return 
      */
-    protected abstract Collection<Move> kingCastles(Collection<Move> currectPlayerMoves, Collection<Move> opponentMoves);
+    protected abstract MyList<Move> kingCastles(MyList<Move> currectPlayerMoves, MyList<Move> opponentMoves);
 
 
 }

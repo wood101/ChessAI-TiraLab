@@ -5,11 +5,12 @@
  */
 package fi.helsinki.chessai.board.pieces;
 
+import fi.helsinki.chessai.board.Move;
 import fi.helsinki.chessai.Side;
 import fi.helsinki.chessai.board.Board;
 import fi.helsinki.chessai.board.Tile;
-import java.util.ArrayList;
-import java.util.Collection;
+import fi.helsinki.chessai.utility.BoardUtility;
+import fi.helsinki.chessai.utility.MyList;
 
 /**
  * The class for the king piece
@@ -22,9 +23,10 @@ public class King extends Piece{
      * Constructor
      * @param position the position of the piece on the board
      * @param pieceSide The colour of the piece
+     * @param firstMove
      */
-    public King(final int position, final Side pieceSide) {
-        super(PieceType.KING, position, pieceSide);
+    public King (final int position, final Side pieceSide, final boolean firstMove) {
+        super(PieceType.KING, position, pieceSide, firstMove);
     }
     
      /**
@@ -33,16 +35,13 @@ public class King extends Piece{
      * @return returns legal moves
      */
     @Override
-    public Collection<Move> getLegalMoves(Board board) {
+    public MyList<Move> getLegalMoves(Board board) {
         int pieceDestination;
-        final Collection<Move> legalMoves = new ArrayList<>();
+        final MyList<Move> legalMoves = new MyList<>();
         
         for(final int offset : PossibleMoves) {
-            pieceDestination = this.position + offset;
-            if(PieceUtil.isOutOfBounds(this.position, pieceDestination, 1)) {
-                continue;
-            }           
-            if(PieceUtil.isValidTile(pieceDestination)) {
+            pieceDestination = this.position + offset;     
+            if(BoardUtility.isValidTile(pieceDestination) && !BoardUtility.isOutOfBounds(this.position, pieceDestination, 1)) {
                 
                 final Tile destinationTile = board.getTile(pieceDestination);
                 
@@ -61,7 +60,7 @@ public class King extends Piece{
     
     @Override
     public King movePiece(final Move move) {
-        return new King(move.getDestination(), move.getMovedPiece().getPieceSide());
+        return new King(move.getDestination(), move.getMovedPiece().getPieceSide(), move.getMovedPiece().isFirstMove());
     }
     
     @Override

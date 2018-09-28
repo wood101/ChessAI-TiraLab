@@ -5,12 +5,13 @@
  */
 package fi.helsinki.chessai.board.pieces;
 
+import fi.helsinki.chessai.board.Move;
 import fi.helsinki.chessai.Side;
 import fi.helsinki.chessai.board.Board;
 import fi.helsinki.chessai.board.Tile;
-import fi.helsinki.chessai.board.pieces.Move.*;
-import java.util.ArrayList;
-import java.util.Collection;
+import fi.helsinki.chessai.board.Move.*;
+import fi.helsinki.chessai.utility.BoardUtility;
+import fi.helsinki.chessai.utility.MyList;
 
 /**
  * The class for the knight piece
@@ -23,9 +24,10 @@ public class Knight extends Piece {
      * Constructor
      * @param position the position of the piece on the board
      * @param pieceSide The colour of the piece
+     * @param firstMove
      */
-    public Knight(final int position, final Side pieceSide) {
-        super(PieceType.KNIGHT, position, pieceSide);
+    public Knight (final int position, final Side pieceSide, final boolean firstMove) {
+        super(PieceType.KNIGHT, position, pieceSide, firstMove);
     }
     
     /**
@@ -34,14 +36,13 @@ public class Knight extends Piece {
      * @return returns legal moves
      */
     @Override
-    public Collection<Move> getLegalMoves(Board board) {
+    public MyList<Move> getLegalMoves(Board board) {
         int pieceDestination;
-        final Collection<Move> legalMoves = new ArrayList<>();
+        final MyList<Move> legalMoves = new MyList<>();
         
         for(final int offset : PossibleMoves) {
             pieceDestination = this.position + offset;    
-            if(PieceUtil.isValidTile(pieceDestination) && !PieceUtil.isOutOfBounds(this.position, pieceDestination, 2)) {
-                
+            if(BoardUtility.isValidTile(pieceDestination) && !BoardUtility.isOutOfBounds(this.position, pieceDestination, 2)) {
                 final Tile destinationTile = board.getTile(pieceDestination);
                 
                 if(!destinationTile.occupied()) {
@@ -59,7 +60,7 @@ public class Knight extends Piece {
     
     @Override
     public Knight movePiece(final Move move) {
-        return new Knight(move.getDestination(), move.getMovedPiece().getPieceSide());
+        return new Knight(move.getDestination(), move.getMovedPiece().getPieceSide(), move.getMovedPiece().isFirstMove());
     }    
     
     @Override

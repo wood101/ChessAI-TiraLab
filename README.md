@@ -4,6 +4,8 @@ Functioning chess game with an AI you can play against.
 
 ## Documentation
 [Design document](http://github.com/wood101/ChessAITiraLab/blob/master/Documentation/Design_document.md)
+[Testing](http://github.com/wood101/ChessAITiraLab/blob/master/Documentation/Testing_document.md)
+[Implementation](http://github.com/wood101/ChessAITiraLab/blob/master/Documentation/Implementation_document.md)
 
 ## Weekly reports
 
@@ -12,5 +14,7 @@ Functioning chess game with an AI you can play against.
 [Week 2](http://github.com/wood101/ChessAITiraLab/blob/master/Documentation/Week2.md)
 <br>
 [Week 3](http://github.com/wood101/ChessAITiraLab/blob/master/Documentation/Week3.md)
+<br>
+[Week 4](http://github.com/wood101/ChessAITiraLab/blob/master/Documentation/Week4.md)
 
 ## [Hour bookkeeping](http://github.com/wood101/ChessAITiraLab/blob/master/Documentation/Hour_bookkeeping.md)

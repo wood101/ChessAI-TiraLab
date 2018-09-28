@@ -5,9 +5,10 @@
  */
 package fi.helsinki.chessai.board.pieces;
 
+import fi.helsinki.chessai.board.Move;
 import fi.helsinki.chessai.Side;
 import fi.helsinki.chessai.board.Board;
-import java.util.Collection;
+import fi.helsinki.chessai.utility.MyList;
 
 /**
  * Class for the chess pieces.
@@ -18,7 +19,7 @@ public abstract class Piece {
     protected final PieceType pieceType;
     protected final int position;
     protected final Side pieceSide;
-    protected final boolean firstMove;
+    protected boolean firstMove;
     private final int cachedHashCode;
     
     /**
@@ -27,11 +28,11 @@ public abstract class Piece {
      * @param position
      * @param pieceSide 
      */
-    Piece(final PieceType pieceType, final int position, final Side pieceSide) {
+    Piece(final PieceType pieceType, final int position, final Side pieceSide, final boolean firstMove) {
         this.pieceSide = pieceSide;
         this.position = position;
         this.pieceType = pieceType;
-        this.firstMove = false;
+        this.firstMove = firstMove;
         this.cachedHashCode = computeHashCode();
     }
     
@@ -106,11 +107,18 @@ public abstract class Piece {
     }
     
     /**
+     * Sets the firstMove value to false.
+     */
+    public void Moved() {
+        this.firstMove = false;
+    }
+    
+    /**
      * Get a list of the possible moves the piece can make.
      * @param board
      * @return 
      */
-    public abstract Collection<Move>getLegalMoves(final Board board);
+    public abstract MyList<Move>getLegalMoves(final Board board);
     
     /**
      * Returns the piece with an updated position.
@@ -123,26 +131,32 @@ public abstract class Piece {
      * Enum of the different types of pieces
      */
     public enum PieceType {
-        PAWN("P"),
-        KNIGHT("N"),
-        BISHOP("B"),
-        ROOK("R"),
-        QUEEN("Q"),
-        KING("K");
+        PAWN("P", 100),
+        KNIGHT("N", 300),
+        BISHOP("B", 300),
+        ROOK("R", 500),
+        QUEEN("Q", 900),
+        KING("K", 10000);
                 
         private String pieceName;
+        private int pieceValue;
         
         /**
          * Name of the piece.
          * @param pieceName 
          */
-        PieceType(final String pieceName) {
+        PieceType(final String pieceName, final int pieceValue) {
             this.pieceName = pieceName;
+            this.pieceValue = pieceValue;
         }
         
         @Override
         public String toString() {
             return this.pieceName;
+        }
+        
+        public int getPieceValue() {
+            return this.pieceValue;
         }
     }
 }

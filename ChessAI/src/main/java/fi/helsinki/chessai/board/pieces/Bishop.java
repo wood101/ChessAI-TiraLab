@@ -1,8 +1,10 @@
 package fi.helsinki.chessai.board.pieces;
 
+import fi.helsinki.chessai.utility.PieceUtil;
+import fi.helsinki.chessai.board.Move;
 import fi.helsinki.chessai.Side;
 import fi.helsinki.chessai.board.Board;
-import java.util.Collection;
+import fi.helsinki.chessai.utility.MyList;
 
 /**
  * The class for the bishop piece
@@ -15,9 +17,10 @@ public class Bishop extends Piece {
      * Constructor
      * @param position the position of the piece on the board
      * @param pieceSide The colour of the piece
+     * @param firstMove
      */
-    public Bishop (final int position, final Side pieceSide) {
-        super(PieceType.BISHOP, position, pieceSide);
+    public Bishop (final int position, final Side pieceSide, final boolean firstMove) {
+        super(PieceType.BISHOP, position, pieceSide, firstMove);
     }
     
     /**
@@ -26,7 +29,7 @@ public class Bishop extends Piece {
      * @return 
      */
     @Override
-    public Collection<Move> getLegalMoves(Board board) {
+    public MyList<Move> getLegalMoves(Board board) {
         return PieceUtil.getLegalVectorMoves(board, this, PossibleMoveVectors);    
     }
     
@@ -37,6 +40,6 @@ public class Bishop extends Piece {
 
     @Override
     public Piece movePiece(final Move move) {
-        return new Bishop(move.getDestination(), move.getMovedPiece().getPieceSide());
+        return new Bishop(move.getDestination(), move.getMovedPiece().getPieceSide(), move.getMovedPiece().isFirstMove());
     }
 }

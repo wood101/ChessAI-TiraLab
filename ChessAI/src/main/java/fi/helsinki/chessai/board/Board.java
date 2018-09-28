@@ -10,10 +10,8 @@ import fi.helsinki.chessai.board.pieces.*;
 import fi.helsinki.chessai.player.BlackPlayer;
 import fi.helsinki.chessai.player.Player;
 import fi.helsinki.chessai.player.WhitePlayer;
-import fi.helsinki.chessai.utility.MoveCombiner;
-import java.util.ArrayList;
+import fi.helsinki.chessai.utility.MyList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,27 +22,27 @@ import java.util.Map;
  */
 public final class Board {
     private final List<Tile> gameboard;
-    private final Collection<Piece> whitePieces;
-    private final Collection<Piece> blackPieces;
+    private final MyList<Piece> whitePieces;
+    private final MyList<Piece> blackPieces;
     private final WhitePlayer whitePlayer;
     private final BlackPlayer blackPlayer;
     private final Player currentPlayer;
+    private final Pawn enPassantPawn;
     
     /**
-     * Constructor
+     * Constructor utilizing the builder class.
      * @param builder 
      */
     private Board(final Builder builder) {
     this.gameboard = createBoard(builder);
     this.whitePieces = activePieces(this.gameboard, Side.WHITE);
     this.blackPieces = activePieces(this.gameboard, Side.BLACK);
-    final Collection<Move> whiteLegalMoves = legalMovesForPieces(this.whitePieces);
-    final Collection<Move> blackLegalMoves = legalMovesForPieces(this.blackPieces);
+    final MyList<Move> whiteLegalMoves = legalMovesForPieces(this.whitePieces);
+    final MyList<Move> blackLegalMoves = legalMovesForPieces(this.blackPieces);
     this.whitePlayer = new WhitePlayer(this, whiteLegalMoves, blackLegalMoves);
     this.blackPlayer = new BlackPlayer(this, blackLegalMoves, whiteLegalMoves);
-    //Not done
-    //this.currentPlayer = builder.nextMoveMaker.choosePlayer(this.whitePlayer, this.blackPlayer);
-    this.currentPlayer = whitePlayer;
+    this.enPassantPawn = builder.enPassantPawn;
+    this.currentPlayer = builder.nextMoveMaker.choosePlayer(this.whitePlayer, this.blackPlayer);
     }
     
     /**
@@ -76,32 +74,34 @@ public final class Board {
     public static Board createStandardBoard() {
         final Builder builder = new Builder();
         //Black pieces
-        builder.setPiece(new King(4, Side.BLACK));
-        builder.setPiece(new Queen(3, Side.BLACK));
-        builder.setPiece(new Knight(1, Side.BLACK));
-        builder.setPiece(new Knight(6, Side.BLACK));
-        builder.setPiece(new Rook(0, Side.BLACK));
-        builder.setPiece(new Rook(7, Side.BLACK));
-        builder.setPiece(new Bishop(2, Side.BLACK));
-        builder.setPiece(new Bishop(5, Side.BLACK));
+        builder.setPiece(new King(4, Side.BLACK, true));
+        builder.setPiece(new Queen(3, Side.BLACK, true));
+        builder.setPiece(new Knight(1, Side.BLACK, true));
+        builder.setPiece(new Knight(6, Side.BLACK, true));
+        builder.setPiece(new Rook(0, Side.BLACK, true));
+        builder.setPiece(new Rook(7, Side.BLACK, true));
+        builder.setPiece(new Bishop(2, Side.BLACK, true));
+        builder.setPiece(new Bishop(5, Side.BLACK, true));
         for(int i = 8; i <= 15; i++) {
-            builder.setPiece(new Pawn(i, Side.BLACK));
+            builder.setPiece(new Pawn(i, Side.BLACK, true));
         }
         //White pieces
-        builder.setPiece(new King(60, Side.WHITE));
-        builder.setPiece(new Queen(59, Side.WHITE));
-        builder.setPiece(new Knight(57, Side.WHITE));
-        builder.setPiece(new Knight(62, Side.WHITE));
-        builder.setPiece(new Rook(56, Side.WHITE));
-        builder.setPiece(new Rook(63, Side.WHITE));
-        builder.setPiece(new Bishop(61, Side.WHITE));
-        builder.setPiece(new Bishop(58, Side.WHITE));
+        builder.setPiece(new King(60, Side.WHITE, true));
+        builder.setPiece(new Queen(59, Side.WHITE, true));
+        builder.setPiece(new Knight(57, Side.WHITE, true));
+        builder.setPiece(new Knight(62, Side.WHITE, true));
+        builder.setPiece(new Rook(56, Side.WHITE, true));
+        builder.setPiece(new Rook(63, Side.WHITE, true));
+        builder.setPiece(new Bishop(61, Side.WHITE, true));
+        builder.setPiece(new Bishop(58, Side.WHITE, true));
         for(int i = 48; i <= 55; i++) {
-            builder.setPiece(new Pawn(i, Side.WHITE));
+            builder.setPiece(new Pawn(i, Side.WHITE, true));
         }
         builder.setMoveMaker(Side.WHITE);
+        builder.setEnPassantPawn(null);
         return builder.build();
     }
+    
     
     /**
      * Lists the pieces currently on the game board.
@@ -109,8 +109,8 @@ public final class Board {
      * @param side 
      * @return 
      */
-    public Collection<Piece> activePieces(final List<Tile> gameboard, final Side side) {
-        final List<Piece> activePieces = new ArrayList<>();
+    public MyList<Piece> activePieces(final List<Tile> gameboard, final Side side) {
+        final MyList<Piece> activePieces = new MyList<>();
         
         for(final Tile tile : gameboard) {
             if(tile.occupied()) {
@@ -127,7 +127,7 @@ public final class Board {
      * Returns all black pieces
      * @return 
      */
-    public Collection<Piece> getBlackPieces() {
+    public MyList<Piece> getBlackPieces() {
         return this.blackPieces;
     }
     
@@ -135,7 +135,7 @@ public final class Board {
      * Returns all white pieces
      * @return 
      */
-    public Collection<Piece> getWhitePieces() {
+    public MyList<Piece> getWhitePieces() {
         return this.whitePieces;
     }
     
@@ -143,8 +143,10 @@ public final class Board {
      * Gives all moves on the board.
      * @return 
      */
-    public Collection<Move> getAllLegalMoves() {
-        return MoveCombiner.combineMoves(this.whitePlayer.getLegalMoves(), this.blackPlayer.getLegalMoves());
+    public MyList<Move> getAllLegalMoves() {
+        MyList<Move> list = this.whitePlayer.getLegalMoves();
+        list.addAll(this.blackPlayer.getLegalMoves());
+        return list;
     }    
     
     /**
@@ -152,8 +154,8 @@ public final class Board {
      * @param pieces
      * @return 
      */
-    private Collection<Move> legalMovesForPieces(Collection<Piece> pieces) {
-        final List<Move> legalMoves = new ArrayList<>();    
+    private MyList<Move> legalMovesForPieces(MyList<Piece> pieces) {
+        final MyList<Move> legalMoves = new MyList<>(); 
         for (final Piece piece : pieces) {
             legalMoves.addAll(piece.getLegalMoves(this));
         }
@@ -183,15 +185,24 @@ public final class Board {
     public Player currentPlayer() {
         return this.currentPlayer;
     }
+    
+    /**
+     * Returns the player whose turn it is.
+     * @return 
+     */
+    public Pawn getEnPassantPawn() {
+        return this.enPassantPawn;
+    }
 
     /**
      * Class to build the chessboard.
      */
     public static class Builder {
         
-        Map<Integer, Piece> boardConfig;
-        Side nextMoveMaker;
-        Move transitionMove;
+        private Map<Integer, Piece> boardConfig;
+        private Side nextMoveMaker;
+        private Move transitionMove;
+        private Pawn enPassantPawn;
         
         public Builder() {
             this.boardConfig = new HashMap<>();
@@ -216,16 +227,27 @@ public final class Board {
             return this;
         }
         
+        /**
+         * Sets the move that is happening on the board.
+         * @param transitionMove
+         * @return 
+         */
         public Builder setMoveTransition(final Move transitionMove) {
             this.transitionMove = transitionMove;
             return this;
-}
+        }
+        
+        public Builder setEnPassantPawn(final Pawn enPassantPawn) {
+            this.enPassantPawn = enPassantPawn;
+            return this;
+        }
         
         public Board build() {
             return new Board(this);
         }
     }
-
+    
+    
     /**
      * Represents the chessboard as a String.
      * @return 

@@ -8,12 +8,12 @@ package fi.helsinki.chessai.player;
 import fi.helsinki.chessai.Side;
 import fi.helsinki.chessai.board.Board;
 import fi.helsinki.chessai.board.Tile;
-import fi.helsinki.chessai.board.pieces.Move;
+import fi.helsinki.chessai.board.Move;
 import fi.helsinki.chessai.board.pieces.Piece;
 import fi.helsinki.chessai.board.pieces.Piece.PieceType;
 import fi.helsinki.chessai.board.pieces.Rook;
+import fi.helsinki.chessai.utility.MyList;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -22,14 +22,14 @@ import java.util.List;
  */
 public class WhitePlayer extends Player {
     
-    public WhitePlayer(Board board, Collection<Move> whiteLegalMoves, Collection<Move> blackLegalMoves) {
+    public WhitePlayer(Board board, MyList<Move> whiteLegalMoves, MyList<Move> blackLegalMoves) {
         super(board, whiteLegalMoves, blackLegalMoves);
         
     }
 
     @Override
-    public Collection<Piece> getActivePieces() {
-        return this.board.getBlackPieces();
+    public MyList<Piece> getActivePieces() {
+        return this.board.getWhitePieces();
     }
 
     @Override
@@ -43,8 +43,8 @@ public class WhitePlayer extends Player {
     }
 
     @Override
-    protected Collection<Move> kingCastles(Collection<Move> currectPlayerMoves, Collection<Move> opponentMoves) {
-        final List<Move> kingCastles = new ArrayList<>();
+    protected MyList<Move> kingCastles(MyList<Move> currectPlayerMoves, MyList<Move> opponentMoves) {
+        final MyList<Move> kingCastles = new MyList<>();
         if(this.playerKing.isFirstMove() && !this.isInCheck()) {
             if(!this.board.getTile(61).occupied() && !this.board.getTile(62).occupied()) {
                 final Tile rookTile = this.board.getTile(63);

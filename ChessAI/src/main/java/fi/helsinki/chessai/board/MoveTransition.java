@@ -5,8 +5,6 @@
  */
 package fi.helsinki.chessai.board;
 
-import fi.helsinki.chessai.board.pieces.Move;
-
 /**
  * Class for the active movement happening on the board.
  * @author janne

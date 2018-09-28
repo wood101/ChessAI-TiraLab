@@ -8,6 +8,8 @@
 | 14.9. | 3    | Coding the rest of the chess pieces and initialization of the board |
 | 14.9. | 2    | Tests and bug fixing |
 | 21.9. | 9    | More moves, some of the graphichal interface, players |
+| 27.9. | 2    | Bug fixing |
+| 28.9. | 11    | More bug fixing, finished gui, my own list, documentation, some tests |
 
 <br>
-Total hours: 19
+Total hours: 32
