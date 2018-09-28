@@ -4,7 +4,9 @@ Functioning chess game with an AI you can play against.
 
 ## Documentation
 [Design document](http://github.com/wood101/ChessAITiraLab/blob/master/Documentation/Design_document.md)
+<br>
 [Testing](http://github.com/wood101/ChessAITiraLab/blob/master/Documentation/Testing_document.md)
+<br>
 [Implementation](http://github.com/wood101/ChessAITiraLab/blob/master/Documentation/Implementation_document.md)
 
 ## Weekly reports
