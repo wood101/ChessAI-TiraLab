@@ -5,7 +5,7 @@ import fi.helsinki.chessai.board.Move;
 import fi.helsinki.chessai.board.MoveTransition;
 
 /**
- *
+ * Class for the Minimax algorithm.
  * @author janne
  */
 public class MiniMax implements MoveStrategy {
@@ -18,6 +18,11 @@ public class MiniMax implements MoveStrategy {
         this.searchDepth = searchDepth;
     }
     
+    /**
+     * Returns the best move that the algorithm got.
+     * @param board
+     * @return 
+     */
     @Override
     public Move execute(Board board) {
         final long startTime = System.currentTimeMillis();
@@ -43,10 +48,23 @@ public class MiniMax implements MoveStrategy {
         return bestMove;
     }
     
+    /**
+     * Returns true if the game state is at an end.
+     * @param board
+     * @return 
+     */
     private boolean gameEnd(Board board) {
         return board.currentPlayer().isInCheckMate() || board.currentPlayer().isInStaleMate();
     }    
     
+    /**
+     * The min portion of the algorithm.
+     * @param board
+     * @param searchDepth
+     * @param alpha
+     * @param beta
+     * @return 
+     */
     public int min(final Board board, final int searchDepth, int alpha, int beta) {
         if(searchDepth == 0 || gameEnd(board)) {
             return this.evaluator.evaluate(board, searchDepth);
@@ -63,6 +81,14 @@ public class MiniMax implements MoveStrategy {
         return val;
     }
     
+     /**
+     * The max portion of the algorithm.
+     * @param board
+     * @param searchDepth
+     * @param alpha
+     * @param beta
+     * @return 
+     */
     public int max(final Board board, final int searchDepth, int alpha, int beta) {
         if(searchDepth == 0 || gameEnd(board)) {
             return this.evaluator.evaluate(board, searchDepth);

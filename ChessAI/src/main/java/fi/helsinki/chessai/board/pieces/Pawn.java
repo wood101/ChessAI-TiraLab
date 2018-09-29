@@ -71,11 +71,6 @@ public class Pawn extends Piece{
         return legalMoves;
     }
     
-    private MyList<Move> promotionMoves() {
-        
-        return null;
-    }
-    
     @Override
     public Pawn movePiece(final Move move) {
         return new Pawn(move.getDestination(), move.getMovedPiece().getPieceSide(), false);
@@ -86,6 +81,10 @@ public class Pawn extends Piece{
         return PieceType.PAWN.toString();
     }
 
+    /**
+     * Returns the pawn as a queen.
+     * @return 
+     */
     public Piece getPromotionPiece() {
         return new Queen(this.position, this.pieceSide, false);
     }

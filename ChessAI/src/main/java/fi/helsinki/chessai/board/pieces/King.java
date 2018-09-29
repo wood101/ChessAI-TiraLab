@@ -54,6 +54,10 @@ public class King extends Piece{
         return new King(move.getDestination(), move.getMovedPiece().getPieceSide(), false, move.isCastling());
     }
     
+    /**
+     * Returns true if the king is castled.
+     * @return 
+     */
     public boolean isCastled() {
         return this.isCastled;
     }  

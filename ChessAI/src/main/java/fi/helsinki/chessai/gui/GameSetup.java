@@ -13,7 +13,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 /**
- *
+ * Class for the setup option.
  * @author janne
  */
 class GameSetup extends JDialog {
@@ -25,6 +25,11 @@ class GameSetup extends JDialog {
     private static final String HUMAN_TEXT = "Human";
     private static final String COMPUTER_TEXT = "Computer";
 
+    /**
+     * Constructor that creates the visible buttons and text.
+     * @param frame
+     * @param modal 
+     */
     GameSetup(final JFrame frame,
               final boolean modal) {
         super(frame, modal);
@@ -79,12 +84,19 @@ class GameSetup extends JDialog {
         pack();
         setVisible(false);
     }
-
+    /**
+     * Turns the setup bar visible.
+     */
     void promptUser() {
         setVisible(true);
         repaint();
     }
 
+    /**
+     * True if player is an AI.
+     * @param player
+     * @return 
+     */
     boolean isAIPlayer(final Player player) {
         if(player.getSide() == Side.WHITE) {
             return getWhitePlayerType() == PlayerType.COMPUTER;
@@ -100,6 +112,13 @@ class GameSetup extends JDialog {
         return this.blackPlayerType;
     }
 
+    /**
+     * Creates the spinner where you can input a number.
+     * @param c
+     * @param label
+     * @param model
+     * @return 
+     */
     private static JSpinner addLabeledSpinner(final Container c,
                                               final String label,
                                               final SpinnerModel model) {
@@ -110,7 +129,10 @@ class GameSetup extends JDialog {
         c.add(spinner);
         return spinner;
     }
-
+    /**
+     * Search depth of the minimax algorithm.
+     * @return 
+     */
     int getSearchDepth() {
         return (Integer)this.searchDepthSpinner.getValue();
     }

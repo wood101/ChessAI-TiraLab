@@ -89,5 +89,10 @@ public enum Side {
      */
     public abstract Player choosePlayer(WhitePlayer whitePlayer, BlackPlayer blackPlayer);
     
+    /**
+     * Returns true if the pawn is on a row that causes a promotion.
+     * @param coordinate
+     * @return 
+     */
     public abstract Boolean isPromotionRow(int coordinate);
 }

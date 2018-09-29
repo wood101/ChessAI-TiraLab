@@ -70,7 +70,6 @@ public class Table extends Observable {
         this.frame.setLocationRelativeTo(null);
         this.frame.setVisible(true);
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.gameSetup.promptUser();
     }
     
     public static Table get() {
@@ -118,12 +117,16 @@ public class Table extends Observable {
         return fileMenu;
     }
     
+    /**
+     * Creates an options menu.
+     * @return 
+     */
     private JMenu createOptionsMenu() {
         final JMenu optionsMenu = new JMenu("Options");
         final JMenuItem setupGameMenuItem = new JMenuItem("Setup Game");
         setupGameMenuItem.addActionListener((ActionEvent e) -> {
             Table.get().getGameSetup().promptUser();
-            Table.get().setupUpdate(Table.get().getGameSetup());
+            Table.get().setUpUpdate(Table.get().getGameSetup());
         });
         optionsMenu.add(setupGameMenuItem);
         return optionsMenu;
@@ -137,11 +140,19 @@ public class Table extends Observable {
         return this.chessBoard;
     }
     
-    private void setupUpdate(GameSetup gameSetup) {
+    /**
+     * Sets the observers.
+     * @param gameSetup 
+     */
+    private void setUpUpdate(GameSetup gameSetup) {
         setChanged();
         notifyObservers(gameSetup);
     }
-
+    
+    /**
+     * Updates the board to a new board.
+     * @param board 
+     */
     private void updateGameBoard(Board board) {
         this.chessBoard = board;
     }
@@ -149,20 +160,33 @@ public class Table extends Observable {
     private BoardPanel getBoardPanel() {
         return this.panel;
     }
-
+    
+    /**
+     * Notifies the computer of a move that happened.
+     * @param playerType 
+     */
     private void updateAfterMove(PlayerType playerType) {
         setChanged();
         notifyObservers(playerType);
     }
-
+    
+    /**
+     * Makes the table class visible.
+     */
     public void show() {
         Table.get().getBoardPanel().drawBoard(Table.get().getGameBoard());
     }
 
 
-    
+    /**
+     * Class for the AI reacting to the game.
+     */
     private static class TableGameAIWatcher implements Observer {
-
+        /**
+         * Activates the AI when its turn comes.
+         * @param o
+         * @param o1 
+         */
         @Override
         public void update(Observable o, Object o1) {
             if(Table.get().getGameSetup().isAIPlayer(Table.get().getGameBoard().currentPlayer()) && !Table.get().getGameBoard().currentPlayer().isInCheckMate() && !Table.get().getGameBoard().currentPlayer().isInStaleMate()) {
@@ -179,20 +203,27 @@ public class Table extends Observable {
         }
         
     }
-
+    /**
+     * Class that activates the algorithm of the AI.
+     */
     private static class AIThinkTank extends SwingWorker<Move, String> {
-
         public AIThinkTank() {
-            
         }
-
+        /**
+         * Returns the result of the work that the algorithm does.
+         * @return
+         * @throws Exception 
+         */
         @Override
         protected Move doInBackground() throws Exception {
-            final MoveStrategy miniMax = new MiniMax(4);
+            final MoveStrategy miniMax = new MiniMax(6);
             final Move bestMove = miniMax.execute(Table.get().getGameBoard());
             return bestMove;
         }
         
+        /**
+         * Uses the best move to update the game state.
+         */
         @Override
         public void done() {
             try {
@@ -239,6 +270,9 @@ public class Table extends Observable {
         }
     }
     
+    /**
+     * Enum for the different types of players.
+     */
     enum PlayerType {
         HUMAN,
         COMPUTER
