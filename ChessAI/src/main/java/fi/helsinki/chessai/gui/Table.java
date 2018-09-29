@@ -61,7 +61,7 @@ public class Table extends Observable {
      * Constructor
      */
     private Table() {
-        this.frame = new JFrame("chess");
+        this.frame = new JFrame("Chess");
         this.frame.setLayout(new BorderLayout());
         final JMenuBar menu = createMenu();
         this.frame.setJMenuBar(menu);
@@ -216,7 +216,7 @@ public class Table extends Observable {
          */
         @Override
         protected Move doInBackground() throws Exception {
-            final MoveStrategy miniMax = new MiniMax(6);
+            final MoveStrategy miniMax = new MiniMax(4);
             final Move bestMove = miniMax.execute(Table.get().getGameBoard());
             return bestMove;
         }

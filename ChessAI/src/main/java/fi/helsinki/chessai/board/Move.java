@@ -84,15 +84,10 @@ public abstract class Move {
      * @param builder 
      */
     private static void setPiecesOnNewBuild(Builder builder, Move move) {
-        for(final Piece piece : move.board.currentPlayer().getActivePieces()) {
-            if(!move.movedPiece.equals(piece)) {
+        for(final Piece piece : move.board.getAllPieces()) {
+            if(!move.movedPiece.equals(piece) && piece.getPosition() != move.movedPiece.getPosition()) {
                 builder.setPiece(piece);
             }
-        }
-        for(final Piece piece : move.board.currentPlayer().getOpponent().getActivePieces()) {
-                if(piece.getPosition() != move.movedPiece.getPosition()) {
-                    builder.setPiece(piece);
-                }
         }
     }
     
@@ -220,7 +215,11 @@ public abstract class Move {
         @Override
         public Board execute() {
             final Builder builder = new Builder();
-            setPiecesOnNewBuild(builder, this);
+            for (final Piece piece : this.board.getAllPieces()) {
+                if (!this.movedPiece.equals(piece) && !this.rook.equals(piece)) {
+                    builder.setPiece(piece);
+                }
+            }
             builder.setPiece(this.movedPiece.movePiece(this));
             builder.setPiece(new Rook(this.rookDestination, this.rook.getPieceSide(), false));
             builder.setMoveMaker(this.board.currentPlayer().getOpponent().getSide());

@@ -194,6 +194,12 @@ public final class Board {
         return this.enPassantPawn;
     }
 
+    public MyList<Piece> getAllPieces() {
+        MyList<Piece> list = this.getBlackPieces();
+        list.addAll(this.getWhitePieces());
+        return list;
+    }
+
     /**
      * Class to build the chessboard.
      */
