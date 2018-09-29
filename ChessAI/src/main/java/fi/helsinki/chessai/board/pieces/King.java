@@ -17,6 +17,7 @@ import fi.helsinki.chessai.utility.PieceUtility;
  */
 public class King extends Piece{
     private final static int[] MOVES = {-9, -8, -7, -1, 1, 7, 8, 9};
+    private final boolean isCastled;
     
     /**
      * Constructor
@@ -24,8 +25,9 @@ public class King extends Piece{
      * @param pieceSide The colour of the piece
      * @param firstMove
      */
-    public King (final int position, final Side pieceSide, final boolean firstMove) {
+    public King (final int position, final Side pieceSide, final boolean firstMove, final boolean isCastled) {
         super(PieceType.KING, position, pieceSide, firstMove);
+        this.isCastled = isCastled;
     }
     
      /**
@@ -49,11 +51,17 @@ public class King extends Piece{
     
     @Override
     public King movePiece(final Move move) {
-        return new King(move.getDestination(), move.getMovedPiece().getPieceSide(), false);
+        return new King(move.getDestination(), move.getMovedPiece().getPieceSide(), false, move.isCastling());
     }
+    
+    public boolean isCastled() {
+        return this.isCastled;
+    }  
     
     @Override
     public String toString() {
         return PieceType.KING.toString();
     }
+
+
 }

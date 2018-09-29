@@ -49,7 +49,7 @@ public abstract class Player {
             }
         }
         //throw new RuntimeException("Game doesn't function without a king");
-        return new King(0, Side.BLACK, true);
+        return new King(0, Side.BLACK, true, false);
     }
     
     public King getPlayersKing() {
@@ -63,6 +63,10 @@ public abstract class Player {
     public MyList<Move> getCastleMoves() {
         return this.castleMoves;
     }
+    
+    public boolean isCastled() {
+        return this.playerKing.isCastled();
+    }    
     
     /**
      * Returns all the attacks on a specific tile.
@@ -110,7 +114,7 @@ public abstract class Player {
      * @return 
      */
     public boolean isInStaleMate() {
-        return !this.isInCheck && !hasMoves();
+        return !this.isInCheck && !hasMoves() && this.getActivePieces().size() == 1 && this.getOpponent().getActivePieces().size() == 1;
     }
     
     /**
@@ -137,7 +141,7 @@ public abstract class Player {
             return new MoveTransition(this.board, move, MoveStatus.ILLEGAL_MOVE);
         }
         final Board transitionBoard = move.execute();
-        final MyList<Move> kingAttacks = Player.attacksOnTile(transitionBoard.currentPlayer().getPlayersKing().getPosition(), transitionBoard.currentPlayer().getOpponent().getLegalMoves());
+        final MyList<Move> kingAttacks = Player.attacksOnTile(transitionBoard.currentPlayer().getOpponent().getPlayersKing().getPosition(), transitionBoard.currentPlayer().getLegalMoves());
         if(!kingAttacks.isEmpty()) {
             return new MoveTransition(this.board, move, MoveStatus.INCHECK);
         }

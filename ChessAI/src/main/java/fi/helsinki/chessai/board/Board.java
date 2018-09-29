@@ -74,7 +74,7 @@ public final class Board {
     public static Board createStandardBoard() {
         final Builder builder = new Builder();
         //Black pieces
-        builder.setPiece(new King(4, Side.BLACK, true));
+        builder.setPiece(new King(4, Side.BLACK, true, false));
         builder.setPiece(new Queen(3, Side.BLACK, true));
         builder.setPiece(new Knight(1, Side.BLACK, true));
         builder.setPiece(new Knight(6, Side.BLACK, true));
@@ -86,7 +86,7 @@ public final class Board {
             builder.setPiece(new Pawn(i, Side.BLACK, true));
         }
         //White pieces
-        builder.setPiece(new King(60, Side.WHITE, true));
+        builder.setPiece(new King(60, Side.WHITE, true, false));
         builder.setPiece(new Queen(59, Side.WHITE, true));
         builder.setPiece(new Knight(57, Side.WHITE, true));
         builder.setPiece(new Knight(62, Side.WHITE, true));

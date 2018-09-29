@@ -62,7 +62,7 @@ public class PieceMoveListTest {
     
     @Test
     public void TestMoveListForKing() {
-        boardBuilder.setPiece(new King(26, Side.WHITE, true));
+        boardBuilder.setPiece(new King(26, Side.WHITE, true, false));
         board = boardBuilder.build();
         MyList<Move> moves = board.getTile(26).getPiece().getLegalMoves(board);
         assertTrue(moves.size() == 8);
@@ -70,7 +70,7 @@ public class PieceMoveListTest {
     
     @Test
     public void TestAttackMoveWithKing() {
-        boardBuilder.setPiece(new King(26, Side.WHITE, true));
+        boardBuilder.setPiece(new King(26, Side.WHITE, true, false));
         boardBuilder.setPiece(new Bishop(25, Side.BLACK, true));
         board = boardBuilder.build();
         MyList<Move> moves = board.getTile(26).getPiece().getLegalMoves(board);
@@ -97,7 +97,7 @@ public class PieceMoveListTest {
     
     @Test
     public void TestMoveOnAlly() {
-        boardBuilder.setPiece(new King(26, Side.WHITE, true));
+        boardBuilder.setPiece(new King(26, Side.WHITE, true, false));
         boardBuilder.setPiece(new Bishop(25, Side.WHITE, true));
         board = boardBuilder.build();
         MyList<Move> moves = board.getTile(26).getPiece().getLegalMoves(board);
@@ -114,7 +114,7 @@ public class PieceMoveListTest {
     
     @Test
     public void TestBottomRightCornerMoves() {
-        boardBuilder.setPiece(new King(63, Side.WHITE, true));
+        boardBuilder.setPiece(new King(63, Side.WHITE, true, false));
         board = boardBuilder.build();
         MyList<Move> moves = board.getTile(63).getPiece().getLegalMoves(board);
         assertTrue(moves.size() == 3);
@@ -122,7 +122,7 @@ public class PieceMoveListTest {
 
     @Test
     public void TestTopLeftCornerMoves() {
-        boardBuilder.setPiece(new King(0, Side.WHITE, true));
+        boardBuilder.setPiece(new King(0, Side.WHITE, true, false));
         board = boardBuilder.build();
         MyList<Move> moves = board.getTile(0).getPiece().getLegalMoves(board);
         assertTrue(moves.size() == 3);
@@ -175,7 +175,7 @@ public class PieceMoveListTest {
     public void TestCastlingForBlack() {
         boardBuilder.setPiece(new Rook(7, Side.BLACK, true));
         boardBuilder.setPiece(new Rook(0, Side.BLACK, true));
-        boardBuilder.setPiece(new King(4, Side.BLACK, true));
+        boardBuilder.setPiece(new King(4, Side.BLACK, true, false));
         board = boardBuilder.build();
         MyList<Move> moves = board.getTile(4).getPiece().getLegalMoves(board);
         assertTrue(moves.size() == 7);
@@ -185,7 +185,7 @@ public class PieceMoveListTest {
     public void TestCastlingForWhite() {
         boardBuilder.setPiece(new Rook(63, Side.WHITE, true));
         boardBuilder.setPiece(new Rook(56, Side.WHITE, false));
-        boardBuilder.setPiece(new King(59, Side.WHITE, true));
+        boardBuilder.setPiece(new King(59, Side.WHITE, true, false));
         board = boardBuilder.build();
         MyList<Move> moves = board.getTile(59).getPiece().getLegalMoves(board);
         assertTrue(moves.size() == 6);

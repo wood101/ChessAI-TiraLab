@@ -67,6 +67,14 @@ public abstract class Piece {
     }
     
     /**
+     * Returns the amounth of score the piece is worth.
+     * @return 
+     */
+    public int getPieceValue() {
+        return this.pieceType.pieceValue;
+    }
+    
+    /**
      * Get a list of the possible moves the piece can make.
      * @param board
      * @return 
@@ -106,10 +114,6 @@ public abstract class Piece {
         @Override
         public String toString() {
             return this.pieceName;
-        }
-        
-        public int getPieceValue() {
-            return this.pieceValue;
         }
     }
 }

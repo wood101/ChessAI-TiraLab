@@ -2,6 +2,7 @@
 import fi.helsinki.chessai.utility.BoardUtility;
 import fi.helsinki.chessai.utility.MyList;
 import java.util.Iterator;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
@@ -77,4 +78,17 @@ public class UtilityTest {
         assertFalse(!BoardUtility.isOutOfBounds(15, 5, 0));
         assertTrue(!BoardUtility.isOutOfBounds(1, 9, 1));
     }
+    
+    @Test
+    public void testAlgebreicNotation() {
+        assertEquals(BoardUtility.getPositionAtCoordinate(0), "A8");
+        assertEquals(BoardUtility.getPositionAtCoordinate(1), "B8");
+        assertEquals(BoardUtility.getPositionAtCoordinate(8), "A7");
+        assertEquals(BoardUtility.getPositionAtCoordinate(2), "C8");
+        assertEquals(BoardUtility.getPositionAtCoordinate(3), "D8");
+        assertEquals(BoardUtility.getPositionAtCoordinate(4), "E8");
+        assertEquals(BoardUtility.getPositionAtCoordinate(5), "F8");
+        assertEquals(BoardUtility.getPositionAtCoordinate(6), "G8");
+        assertEquals(BoardUtility.getPositionAtCoordinate(7), "H8");
+}
 }
