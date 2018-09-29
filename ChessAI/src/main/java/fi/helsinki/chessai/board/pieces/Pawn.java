@@ -35,17 +35,10 @@ public class Pawn extends Piece{
         for(final int offset : MOVES) {
             pieceDestination = this.position + (this.getPieceSide().getDirection() * offset);
             if (BoardUtility.isValidTile(pieceDestination) && !BoardUtility.isOutOfBounds(this.position, pieceDestination, 1)) {
-                if (offset == 8 && !board.getTile(pieceDestination).occupied()){
-                    moveForwardOnce(board, pieceDestination, legalMoves);
-                }
-                else if (offset == 16 && firstMove) {
-                    moveForwardTwice(board, pieceDestination, legalMoves);
-                }
-                else if (offset == 7 && board.getTile(pieceDestination).occupied() || offset == 9 && board.getTile(pieceDestination).occupied()) {
-                    attackMove(board, pieceDestination, legalMoves); 
-                }
-                else if (board.getEnPassantPawn() != null && !board.getTile(pieceDestination).occupied()) {
-                    enPassantAttackMove(board, pieceDestination, offset, legalMoves);
+                if (moveForwardOnce(board, pieceDestination, offset, legalMoves)) {
+                } else if (moveForwardTwice(board, pieceDestination, offset, legalMoves)) {
+                } else if (attackMove(board, pieceDestination, offset, legalMoves)) {
+                } else if (enPassantAttackMove(board, pieceDestination, offset, legalMoves)) {
                 }
             }
         }
@@ -56,71 +49,81 @@ public class Pawn extends Piece{
     public Pawn movePiece(final Move move) {
         return new Pawn(move.getDestination(), move.getMovedPiece().getPieceSide(), false);
     }
-    
-        @Override
-    public String toString() {
-        return PieceType.PAWN.toString();
-    }
 
     /**
-     * The action for moving forward once.
+     * The conditions for moving forward once.
      * @param board
      * @param pieceDestination
      * @param legalMoves 
      */
-    private void moveForwardOnce(Board board, int pieceDestination, MyList<Move> legalMoves) {
-        if(this.pieceSide.isPromotionRow(pieceDestination)) {
-            legalMoves.add(new Move.PawnPromotion(new Move.RegularMove(board, this, pieceDestination)));
-        } else {
-            legalMoves.add(new Move.RegularMove(board, this, pieceDestination));
+    private boolean moveForwardOnce(Board board, int pieceDestination, int offset, MyList<Move> legalMoves) {
+        if (offset == 8 && !board.getTile(pieceDestination).occupied()){
+            if (this.pieceSide.isPromotionRow(pieceDestination)) {
+                legalMoves.add(new Move.PawnPromotion(new Move.RegularMove(board, this, pieceDestination)));
+                
+            } else {
+                legalMoves.add(new Move.RegularMove(board, this, pieceDestination));
+            }
+            return true;
         }
-        
+        return false;
     }
     
     /**
-     * The action for moving forward twice.
+     * The conditions for moving forward twice.
      * @param board
      * @param pieceDestination
      * @param legalMoves 
      */
-    private void moveForwardTwice(Board board, int pieceDestination, MyList<Move> legalMoves) {
-        final int behindPieceDestination = this.position + (this.getPieceSide().getDirection() * 8);
-        if (!board.getTile(behindPieceDestination).occupied() && !board.getTile(pieceDestination).occupied()) {
-            legalMoves.add(new Move.PawnJump(board, this, pieceDestination));
+    private boolean moveForwardTwice(Board board, int pieceDestination, int offset, MyList<Move> legalMoves) {
+        if (offset == 16 && firstMove) {
+            final int behindPieceDestination = this.position + (this.getPieceSide().getDirection() * 8);
+            if (!board.getTile(behindPieceDestination).occupied() && !board.getTile(pieceDestination).occupied()) {
+                legalMoves.add(new Move.PawnJump(board, this, pieceDestination));
+            }
+            return true;
         }
-        
+        return false;
     }
     /**
-     * The action for pawn attacking.
+     * The conditions for pawn attacking.
      * @param board
      * @param pieceDestination
      * @param legalMoves 
      */
-    private void attackMove(Board board, int pieceDestination, MyList<Move> legalMoves) {
-        if(this.pieceSide.isPromotionRow(pieceDestination)) {
-            legalMoves.add(new Move.PawnPromotion(new Move.AttackMove(board, this, pieceDestination, this)));
-        } else {
-            final Piece pieceAtDestination = board.getTile(pieceDestination).getPiece();
-            if (this.pieceSide != pieceAtDestination.getPieceSide()) {
-                legalMoves.add(new Move.AttackMove(board, this, pieceDestination, this));
+    private boolean attackMove(Board board, int pieceDestination, int offset, MyList<Move> legalMoves) {
+        if (offset == 7 && board.getTile(pieceDestination).occupied() || offset == 9 && board.getTile(pieceDestination).occupied()) {
+            if(this.pieceSide.isPromotionRow(pieceDestination)) {
+                legalMoves.add(new Move.PawnPromotion(new Move.AttackMove(board, this, pieceDestination, this)));
+            } else {
+                final Piece pieceAtDestination = board.getTile(pieceDestination).getPiece();
+                if (this.pieceSide != pieceAtDestination.getPieceSide()) {
+                    legalMoves.add(new Move.AttackMove(board, this, pieceDestination, this));
+                }
             }
+            return true;
         }
+        return false;
     }    
     /**
-     * The actions for en passant attacks.
+     * The conditions for en passant attacks.
      * @param board
      * @param pieceDestination
      * @param offset
      * @param legalMoves 
      */
-    private void enPassantAttackMove(Board board, int pieceDestination, int offset, MyList<Move> legalMoves) {
-        if (offset == 7 && board.getEnPassantPawn().getPosition() + this.getPieceSide().getDirection()  == this.position ||
-                offset == 9 && board.getEnPassantPawn().getPosition() - this.getPieceSide().getDirection() == this.position) {
-            
-            if (this.pieceSide != board.getEnPassantPawn().getPieceSide()) {
-                legalMoves.add(new Move.PawnEnPassantAttackMove(board, this, pieceDestination, board.getEnPassantPawn()));
+    private boolean enPassantAttackMove(Board board, int pieceDestination, int offset, MyList<Move> legalMoves) {
+        if (board.getEnPassantPawn() != null && !board.getTile(pieceDestination).occupied()) {
+            if (offset == 7 && board.getEnPassantPawn().getPosition() + this.getPieceSide().getDirection()  == this.position ||
+                    offset == 9 && board.getEnPassantPawn().getPosition() - this.getPieceSide().getDirection() == this.position) {
+
+                if (this.pieceSide != board.getEnPassantPawn().getPieceSide()) {
+                    legalMoves.add(new Move.PawnEnPassantAttackMove(board, this, pieceDestination, board.getEnPassantPawn()));
+                }
             }
+            return true;
         }
+        return false;
     } 
     /**
      * Returns the pawn as a queen.
@@ -128,6 +131,11 @@ public class Pawn extends Piece{
      */
     public Piece getPromotionPiece() {
         return new Queen(this.position, this.pieceSide, false);
+    }
+    
+    @Override
+    public String toString() {
+        return PieceType.PAWN.toString();
     }
 }
 
