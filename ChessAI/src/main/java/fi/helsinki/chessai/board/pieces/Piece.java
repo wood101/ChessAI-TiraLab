@@ -20,7 +20,6 @@ public abstract class Piece {
     protected final int position;
     protected final Side pieceSide;
     protected boolean firstMove;
-    private final int cachedHashCode;
     
     /**
      * Constructor for the piece class.
@@ -33,45 +32,6 @@ public abstract class Piece {
         this.position = position;
         this.pieceType = pieceType;
         this.firstMove = firstMove;
-        this.cachedHashCode = computeHashCode();
-    }
-    
-    /**
-     * Computes a hash code for a piece.
-     * @return 
-     */
-    private int computeHashCode() {
-        int result = pieceType.hashCode();
-        result = 31 * result + pieceSide.hashCode();
-        result = 31 * result + position;
-        result = 31 * result + (firstMove ? 1 : 0);
-        return result;
-    }
-    
-    /**
-     * Checks whether two pieces are the same.
-     * @param other
-     * @return 
-     */
-    @Override
-    public boolean equals(final Object other) {
-        if(this == other) {
-            return true;
-        }
-        if(!(other instanceof Piece)) {
-            return false;
-        }
-        final Piece otherPiece = (Piece) other;
-        return position == otherPiece.getPosition() && pieceType == otherPiece.getPieceType() && pieceSide == otherPiece.getPieceSide() && firstMove == otherPiece.isFirstMove();
-    }
-    
-    /**
-     * Returns the previously calculated hash code.
-     * @return 
-     */
-    @Override
-    public int hashCode() {
-        return this.cachedHashCode;
     }
     
     /**
@@ -107,13 +67,6 @@ public abstract class Piece {
     }
     
     /**
-     * Sets the firstMove value to false.
-     */
-    public void Moved() {
-        this.firstMove = false;
-    }
-    
-    /**
      * Get a list of the possible moves the piece can make.
      * @param board
      * @return 
@@ -138,8 +91,8 @@ public abstract class Piece {
         QUEEN("Q", 900),
         KING("K", 10000);
                 
-        private String pieceName;
-        private int pieceValue;
+        private final String pieceName;
+        private final int pieceValue;
         
         /**
          * Name of the piece.

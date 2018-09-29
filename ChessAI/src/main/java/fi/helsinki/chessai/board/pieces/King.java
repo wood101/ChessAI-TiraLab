@@ -8,16 +8,15 @@ package fi.helsinki.chessai.board.pieces;
 import fi.helsinki.chessai.board.Move;
 import fi.helsinki.chessai.Side;
 import fi.helsinki.chessai.board.Board;
-import fi.helsinki.chessai.board.Tile;
-import fi.helsinki.chessai.utility.BoardUtility;
 import fi.helsinki.chessai.utility.MyList;
+import fi.helsinki.chessai.utility.PieceUtility;
 
 /**
  * The class for the king piece
  * @author janne
  */
 public class King extends Piece{
-    private final static int[] PossibleMoves = {-9, -8, -7, -1, 1, 7, 8, 9};
+    private final static int[] MOVES = {-9, -8, -7, -1, 1, 7, 8, 9};
     
     /**
      * Constructor
@@ -36,31 +35,21 @@ public class King extends Piece{
      */
     @Override
     public MyList<Move> getLegalMoves(Board board) {
-        int pieceDestination;
-        final MyList<Move> legalMoves = new MyList<>();
-        
-        for(final int offset : PossibleMoves) {
-            pieceDestination = this.position + offset;     
-            if(BoardUtility.isValidTile(pieceDestination) && !BoardUtility.isOutOfBounds(this.position, pieceDestination, 1)) {
-                
-                final Tile destinationTile = board.getTile(pieceDestination);
-                
-                if(!destinationTile.occupied()) {
-                    legalMoves.add(new Move.RegularMove(board, this, pieceDestination));
-                } else {
-                    final Piece pieceAtDestination = destinationTile.getPiece();
-                    if(this.pieceSide != pieceAtDestination.getPieceSide()) {
-                        legalMoves.add(new Move.AttackMove(board, this, pieceDestination, pieceAtDestination));
-                    }
-                }
+        final MyList<Move> legalMoves = PieceUtility.getLegalSingleMoves(board, this, MOVES, 1);
+        if(board.getBlackPlayer() != null) {
+            if(this.getPieceSide() == Side.BLACK) {
+                legalMoves.addAll(board.getBlackPlayer().getCastleMoves());
+            } else {
+                legalMoves.addAll(board.getWhitePlayer().getCastleMoves());
             }
+            
         }
         return legalMoves;
     }
     
     @Override
     public King movePiece(final Move move) {
-        return new King(move.getDestination(), move.getMovedPiece().getPieceSide(), move.getMovedPiece().isFirstMove());
+        return new King(move.getDestination(), move.getMovedPiece().getPieceSide(), false);
     }
     
     @Override

@@ -44,6 +44,12 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.0</version>
+                <configuration>
+                    <excludes>
+                        <exclude>fi/helsinki/chessai/gui/*</exclude>
+                        <exclude>fi/helsinki/chessai/*.class</exclude>
+                    </excludes>
+                </configuration>  
                 <executions>
                     <execution>
                         <id>default-prepare-agent</id>

@@ -1,8 +1,8 @@
 package fi.helsinki.chessai.utility;
 
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
+ * To change piece license header, choose License Headers in Project Properties.
+ * To change piece template file, choose Tools | Templates
  * and open the template in the editor.
  */
 import fi.helsinki.chessai.board.Move;
@@ -15,7 +15,7 @@ import fi.helsinki.chessai.board.pieces.Piece;
  * Utility class for the pieces
  * @author janne
  */
-public class PieceUtil {
+public class PieceUtility {
     
     
     /**
@@ -46,6 +46,32 @@ public class PieceUtil {
         }
         return legalMoves;
     }
-
+    
+    /**
+     * Legal moves for a piece that doesn't move in a vector.
+     * @param board
+     * @param piece
+     * @param moves
+     * @param maxDistance Maximum distance of columns the piece can move
+     * @return returns legal moves
+     */
+    public static MyList<Move> getLegalSingleMoves(Board board, Piece piece, int[] moves, int maxDistance) {
+        final MyList<Move> legalMoves = new MyList<>();
+        for(final int offset : moves) {
+            int pieceDestination = piece.getPosition() + offset;    
+            if(BoardUtility.isValidTile(pieceDestination) && !BoardUtility.isOutOfBounds(piece.getPosition(), pieceDestination, maxDistance)) {
+                final Tile destinationTile = board.getTile(pieceDestination);
+                if(!destinationTile.occupied()) {
+                    legalMoves.add(new Move.RegularMove(board, piece, pieceDestination));
+                } else {
+                    final Piece pieceAtDestination = destinationTile.getPiece();
+                    if(piece.getPieceSide() != pieceAtDestination.getPieceSide()) {
+                        legalMoves.add(new Move.AttackMove(board, piece, pieceDestination, pieceAtDestination));
+                    }
+                }
+            }
+        }
+        return legalMoves;
+    }
 
 }

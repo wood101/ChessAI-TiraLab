@@ -34,15 +34,15 @@ public final class Board {
      * @param builder 
      */
     private Board(final Builder builder) {
-    this.gameboard = createBoard(builder);
-    this.whitePieces = activePieces(this.gameboard, Side.WHITE);
-    this.blackPieces = activePieces(this.gameboard, Side.BLACK);
-    final MyList<Move> whiteLegalMoves = legalMovesForPieces(this.whitePieces);
-    final MyList<Move> blackLegalMoves = legalMovesForPieces(this.blackPieces);
-    this.whitePlayer = new WhitePlayer(this, whiteLegalMoves, blackLegalMoves);
-    this.blackPlayer = new BlackPlayer(this, blackLegalMoves, whiteLegalMoves);
-    this.enPassantPawn = builder.enPassantPawn;
-    this.currentPlayer = builder.nextMoveMaker.choosePlayer(this.whitePlayer, this.blackPlayer);
+        this.gameboard = createBoard(builder);
+        this.whitePieces = activePieces(this.gameboard, Side.WHITE);
+        this.blackPieces = activePieces(this.gameboard, Side.BLACK);
+        final MyList<Move> whiteLegalMoves = legalMovesForPieces(this.whitePieces);
+        final MyList<Move> blackLegalMoves = legalMovesForPieces(this.blackPieces);
+        this.whitePlayer = new WhitePlayer(this, whiteLegalMoves, blackLegalMoves);
+        this.blackPlayer = new BlackPlayer(this, blackLegalMoves, whiteLegalMoves);
+        this.enPassantPawn = builder.enPassantPawn;
+        this.currentPlayer = builder.nextMoveMaker.choosePlayer(this.whitePlayer, this.blackPlayer);
     }
     
     /**
@@ -227,16 +227,12 @@ public final class Board {
             return this;
         }
         
+
         /**
-         * Sets the move that is happening on the board.
-         * @param transitionMove
+         * Sets the en passant pawn if that move was executed.
+         * @param enPassantPawn
          * @return 
          */
-        public Builder setMoveTransition(final Move transitionMove) {
-            this.transitionMove = transitionMove;
-            return this;
-        }
-        
         public Builder setEnPassantPawn(final Pawn enPassantPawn) {
             this.enPassantPawn = enPassantPawn;
             return this;

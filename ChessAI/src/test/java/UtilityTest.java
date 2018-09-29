@@ -45,14 +45,30 @@ public class UtilityTest {
         assertTrue(count !=5);
     }
     
-        @Test
+    @Test
     public void TestListContains() {
         MyList<Integer> sut = new MyList<>();
         for(int i = 1; i < 5; i++) {
-        sut.add(i);    
+            sut.add(i);    
         }
         assertTrue(sut.contains(4));
         assertFalse(sut.contains(5));
+    }
+    
+    @Test
+    public void TestListAddAll() {
+        MyList<Integer> sut = new MyList<>();
+        MyList<Integer> sut2 = new MyList<>();
+        for(int i = 1; i < 5; i++) {
+            sut.add(i);    
+        }
+        
+        for(int i = 15; i < 20; i++) {
+            sut2.add(i);    
+        }
+        sut.addAll(sut2);
+        assertTrue(sut.contains(16));
+        assertTrue(sut.size() == 9);
     }
     
     @Test

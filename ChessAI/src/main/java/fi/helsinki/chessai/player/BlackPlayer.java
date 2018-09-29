@@ -41,6 +41,7 @@ public class BlackPlayer extends Player {
     @Override
     protected MyList<Move> kingCastles(MyList<Move> currectPlayerMoves, MyList<Move> opponentMoves) {
         final MyList<Move> kingCastles = new MyList<>();
+        //King side castle
         if(this.playerKing.isFirstMove() && !this.isInCheck()) {
             if(!this.board.getTile(5).occupied() && !this.board.getTile(6).occupied()) {
                 final Tile rookTile = this.board.getTile(7);
@@ -50,6 +51,7 @@ public class BlackPlayer extends Player {
                     }
                 }
             }
+            //Queen side castle
             if(!this.board.getTile(1).occupied() && !this.board.getTile(2).occupied() && !this.board.getTile(3).occupied()) {
                 final Tile rookTile = this.board.getTile(0);
                 if(rookTile.occupied() && rookTile.getPiece().isFirstMove()) {

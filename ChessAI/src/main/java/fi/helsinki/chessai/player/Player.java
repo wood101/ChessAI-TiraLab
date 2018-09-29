@@ -25,6 +25,7 @@ public abstract class Player {
     protected final King playerKing;
     protected final MyList<Move> legalMoves;
     private final boolean isInCheck;
+    private final MyList<Move> castleMoves;
     
     /**
      * Constructor
@@ -35,7 +36,8 @@ public abstract class Player {
     Player(final Board board, final MyList<Move> legalMoves, final MyList<Move> opponentMoves) {
         this.board = board;
         this.playerKing = establishKing();
-        legalMoves.addAll(kingCastles(legalMoves, opponentMoves));
+        this.castleMoves = kingCastles(legalMoves, opponentMoves);
+        legalMoves.addAll(castleMoves);
         this.legalMoves = legalMoves;
         this.isInCheck = !Player.attacksOnTile(this.playerKing.getPosition(), opponentMoves).isEmpty();
         
@@ -57,15 +59,19 @@ public abstract class Player {
     public MyList<Move> getLegalMoves() {
         return this.legalMoves;
     }
+
+    public MyList<Move> getCastleMoves() {
+        return this.castleMoves;
+    }
     
     /**
-     * Returns all the move that the opponent is able to attack with.
+     * Returns all the attacks on a specific tile.
      * @param position
      * @param moves
      * @return 
      */
     public static MyList<Move> attacksOnTile(int position, MyList<Move> moves) {
-        final MyList<Move> attackMoves = new MyList<>();
+        MyList<Move> attackMoves = new MyList<>();
         for(final Move move : moves) {
             if(position == move.getDestination()) {
                 attackMoves.add(move);
@@ -122,14 +128,6 @@ public abstract class Player {
     }    
     
     /**
-     * Returns true if the piece has castled.
-     * @return 
-     */
-    public boolean isCastled() {
-        return false;
-    }
-    
-    /**
      * Creates a new board with updated positions if the move is valid.
      * @param move
      * @return 
@@ -152,7 +150,7 @@ public abstract class Player {
     public abstract Player getOpponent();
     
     /**
-     * Returns a collection of moves that enables the king to castle.
+     * Returns a list of moves that enables the king to castle.
      * @param currectPlayerMoves
      * @param opponentMoves
      * @return 

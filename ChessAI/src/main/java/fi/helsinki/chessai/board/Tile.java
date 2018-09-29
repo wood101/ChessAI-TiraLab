@@ -10,7 +10,7 @@ import java.util.Map;
  */
 public abstract class Tile {
     protected final int tileCoordinate;
-    private static final Map<Integer, EmptyTile> EmptyTiles = setAllEmptyTiles();
+    private static final Map<Integer, EmptyTile> EMPTY_TILES = setAllEmptyTiles();
     private static Map<Integer, EmptyTile> setAllEmptyTiles() {
         final Map<Integer, EmptyTile> emptyTileMap = new HashMap<>();
         for(int i = 0; i <= 64; i++) {
@@ -25,7 +25,7 @@ public abstract class Tile {
      * @return returns the piece if it is there
      */
     public static Tile createTile(final int tileCoordinate, final Piece piece) {
-        return piece != null ? new OccupiedTile(tileCoordinate, piece) : EmptyTiles.get(tileCoordinate);
+        return piece != null ? new OccupiedTile(tileCoordinate, piece) : EMPTY_TILES.get(tileCoordinate);
     }
     
     /**

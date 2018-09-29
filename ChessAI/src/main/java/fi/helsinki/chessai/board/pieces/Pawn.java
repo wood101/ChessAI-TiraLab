@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package fi.helsinki.chessai.board.pieces;
 
 import fi.helsinki.chessai.board.Move;
@@ -10,14 +5,13 @@ import fi.helsinki.chessai.Side;
 import fi.helsinki.chessai.board.Board;
 import fi.helsinki.chessai.utility.BoardUtility;
 import fi.helsinki.chessai.utility.MyList;
-import java.util.ArrayList;
 
 /**
  * The class for the pawn piece
  * @author janne
  */
 public class Pawn extends Piece{
-    private final static int[] PossibleMoves = {7, 8, 9, 16};
+    private final static int[] MOVES = {7, 8, 9, 16};
     
     /**
      * Constructor
@@ -36,32 +30,39 @@ public class Pawn extends Piece{
      */
     @Override
     public MyList<Move> getLegalMoves(Board board) {
-                int pieceDestination;
+        int pieceDestination;
         final MyList<Move> legalMoves = new MyList<>();
-        for(final int offset : PossibleMoves) {
+        for(final int offset : MOVES) {
             pieceDestination = this.position + (this.getPieceSide().getDirection() * offset);
-            if(BoardUtility.isValidTile(pieceDestination) && !BoardUtility.isOutOfBounds(this.position, pieceDestination, 1)) {
-                
-                if(offset == 8 && !board.getTile(pieceDestination).occupied()){
-                    legalMoves.add(new Move.RegularMove(board, this, pieceDestination));
-                    
-                } else if(offset == 16 && firstMove) {
+            if (BoardUtility.isValidTile(pieceDestination) && !BoardUtility.isOutOfBounds(this.position, pieceDestination, 1)) {
+                //Forward one tile move
+                if (offset == 8 && !board.getTile(pieceDestination).occupied()){
+                    if(this.pieceSide.isPromotionRow(pieceDestination)) {
+                        legalMoves.add(new Move.PawnPromotion(new Move.RegularMove(board, this, pieceDestination)));
+                    } else {
+                        legalMoves.add(new Move.RegularMove(board, this, pieceDestination));
+                    }
+                //Forward two tiles move
+                } else if (offset == 16 && firstMove) {
                     final int behindPieceDestination = this.position + (this.getPieceSide().getDirection() * 8);
-                    if(!board.getTile(behindPieceDestination).occupied() && !board.getTile(pieceDestination).occupied()) {
+                    if (!board.getTile(behindPieceDestination).occupied() && !board.getTile(pieceDestination).occupied()) {
                         legalMoves.add(new Move.PawnJump(board, this, pieceDestination));
                     }
-                    
+                //Attack move   
                 } else if (offset == 7 && board.getTile(pieceDestination).occupied() || offset == 9 && board.getTile(pieceDestination).occupied()) {
-                    final Piece pieceAtDestination = board.getTile(pieceDestination).getPiece();
-                    if(this.pieceSide != pieceAtDestination.getPieceSide()) {
-                        legalMoves.add(new Move.AttackMove(board, this, pieceDestination, this));
+                    if(this.pieceSide.isPromotionRow(pieceDestination)) {
+                        legalMoves.add(new Move.PawnPromotion(new Move.AttackMove(board, this, pieceDestination, this)));
+                    } else {
+                        final Piece pieceAtDestination = board.getTile(pieceDestination).getPiece();
+                        if (this.pieceSide != pieceAtDestination.getPieceSide()) {
+                            legalMoves.add(new Move.AttackMove(board, this, pieceDestination, this));
+                        }
                     }
-                    
-                } else if (board.getEnPassantPawn() != null) {
-                    final Piece enPassantPawn = board.getEnPassantPawn();
-                    if(enPassantPawn.getPosition() + 1 == this.position || enPassantPawn.getPosition() - 1 == this.position) {
-                        if(this.pieceSide != enPassantPawn.getPieceSide()) {
-                            legalMoves.add(new Move.PawnEnPassantAttackMove(board, this, pieceDestination, enPassantPawn));
+                //En passant
+                } else if (board.getEnPassantPawn() != null && !board.getTile(pieceDestination).occupied()) {
+                    if (offset == 7 && board.getEnPassantPawn().getPosition() + this.getPieceSide().getDirection()  == this.position || offset == 9 && board.getEnPassantPawn().getPosition() - this.getPieceSide().getDirection() == this.position) {
+                        if (this.pieceSide != board.getEnPassantPawn().getPieceSide()) {
+                            legalMoves.add(new Move.PawnEnPassantAttackMove(board, this, pieceDestination, board.getEnPassantPawn()));
                         }
                     }
                 }
@@ -70,14 +71,23 @@ public class Pawn extends Piece{
         return legalMoves;
     }
     
+    private MyList<Move> promotionMoves() {
+        
+        return null;
+    }
+    
     @Override
     public Pawn movePiece(final Move move) {
-        return new Pawn(move.getDestination(), move.getMovedPiece().getPieceSide(), move.getMovedPiece().isFirstMove());
+        return new Pawn(move.getDestination(), move.getMovedPiece().getPieceSide(), false);
     }
     
         @Override
     public String toString() {
         return PieceType.PAWN.toString();
+    }
+
+    public Piece getPromotionPiece() {
+        return new Queen(this.position, this.pieceSide, false);
     }
 }
 

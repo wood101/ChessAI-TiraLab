@@ -3,6 +3,7 @@ package fi.helsinki.chessai;
 import fi.helsinki.chessai.player.BlackPlayer;
 import fi.helsinki.chessai.player.Player;
 import fi.helsinki.chessai.player.WhitePlayer;
+import fi.helsinki.chessai.utility.BoardUtility;
 
 /**
  * Enum for the different sides of the pieces in chess.
@@ -29,6 +30,11 @@ public enum Side {
         public Player choosePlayer(final WhitePlayer whitePlayer, final BlackPlayer blackPlayer) {
             return whitePlayer;
         }
+
+        @Override
+        public Boolean isPromotionRow(int coordinate) {
+            return BoardUtility.getRow(coordinate) == 1;
+        }
     },
     BLACK {
         @Override
@@ -49,6 +55,11 @@ public enum Side {
         @Override
         public Player choosePlayer(final WhitePlayer whitePlayer, final BlackPlayer blackPlayer) {
             return blackPlayer;
+        }
+
+        @Override
+        public Boolean isPromotionRow(int coordinate) {
+            return BoardUtility.getRow(coordinate) == 8;
         }
     };
     
@@ -77,4 +88,6 @@ public enum Side {
      * @return 
      */
     public abstract Player choosePlayer(WhitePlayer whitePlayer, BlackPlayer blackPlayer);
+    
+    public abstract Boolean isPromotionRow(int coordinate);
 }

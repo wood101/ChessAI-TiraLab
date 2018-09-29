@@ -4,6 +4,7 @@ import fi.helsinki.chessai.board.Board.Builder;
 import fi.helsinki.chessai.board.pieces.Pawn;
 import fi.helsinki.chessai.board.pieces.Piece;
 import fi.helsinki.chessai.board.pieces.Rook;
+import fi.helsinki.chessai.utility.BoardUtility;
 
 /**
  * Class for the different movement types in chess.
@@ -27,35 +28,6 @@ public abstract class Move {
         this.board = board;
         this.movedPiece = movedPiece;
         this.destinationCoordinate = destinationCoordinate;
-    }
-    
-    /**
-     * Computes a hash code for a move.
-     * @return 
-     */
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result *= prime * this.movedPiece.hashCode();
-        result *= prime * this.destinationCoordinate;
-        return result;
-    }
-    /**
-    * Checks whether two moves are the same.
-    * @param other
-    * @return 
-    */
-    @Override
-    public boolean equals(final Object other) {
-        if(this == other) {
-            return true;
-        }
-        if(!(other instanceof Move)) {
-            return false;
-        }
-        final Move otherMove = (Move) other;
-        return getDestination()== otherMove.getDestination() && getMovedPiece().equals(otherMove.getMovedPiece());
     }
     
     /**
@@ -100,6 +72,14 @@ public abstract class Move {
     }
     
     /**
+     * Returns the board that the move is happening on.
+     * @return 
+     */
+    public Board getBoard() {
+        return this.board;
+    }
+    
+    /**
      * Attempts to execute the move and build a new board for it.
      * @return 
      */
@@ -111,14 +91,10 @@ public abstract class Move {
             }
         }
         for(final Piece piece : this.board.currentPlayer().getOpponent().getActivePieces()) {
-            builder.setPiece(piece);
-        }
-        if(this.movedPiece.isFirstMove()) {
-            this.movedPiece.Moved();    
+                builder.setPiece(piece);
         }
         builder.setPiece(this.movedPiece.movePiece(this));
         builder.setMoveMaker(this.board.currentPlayer().getOpponent().getSide());
-        builder.setMoveTransition(this);
         return builder.build();
     }
     
@@ -142,30 +118,26 @@ public abstract class Move {
         }
         
         @Override
-        public int hashCode() {
-            return this.attackedPiece.hashCode() + super.hashCode();
-        }
-        
-        @Override
-        public boolean equals(final Object other) {
-            if(this == other) {
-                return true;
+        public Board execute() {
+            final Builder builder = new Builder();
+            for(final Piece piece : this.board.currentPlayer().getActivePieces()) {
+                if(!this.movedPiece.equals(piece)) {
+                    builder.setPiece(piece);
+                }
             }
-            if(!(other instanceof AttackMove)) {
-                return false;
+            for(final Piece piece : this.board.currentPlayer().getOpponent().getActivePieces()) {
+                if(piece.getPosition() != this.movedPiece.getPosition()) {
+                    builder.setPiece(piece);
+                }
             }
-            final AttackMove otherMove = (AttackMove) other;
-            return super.equals(otherMove) && getAttackedPiece().equals(otherMove.getAttackedPiece());
-        }
-        
-        @Override
-        public Piece getAttackedPiece() {
-            return this.attackedPiece;
+            builder.setPiece(this.movedPiece.movePiece(this));
+            builder.setMoveMaker(this.board.currentPlayer().getOpponent().getSide());
+            return builder.build();
         }
     }
     
     /**
-     * Class for the en passant special attack move for the pawn.
+     * Class for the en passant special attack for the pawn.
      */
     public static final class PawnEnPassantAttackMove extends AttackMove {
         public PawnEnPassantAttackMove(Board board, Piece movedPiece, int destinationCoordinate, final Piece attackedPiece) {      
@@ -186,13 +158,9 @@ public abstract class Move {
                 }
                 
             }
-            if(this.movedPiece.isFirstMove()) {
-                this.movedPiece.Moved();    
-            }
             final Pawn movedPawn = (Pawn) this.movedPiece.movePiece(this);
             builder.setPiece(movedPawn);
             builder.setMoveMaker(this.board.currentPlayer().getOpponent().getSide());
-            builder.setMoveTransition(this);
             return builder.build();
         }
     }  
@@ -216,18 +184,43 @@ public abstract class Move {
             for(final Piece piece : this.board.currentPlayer().getOpponent().getActivePieces()) {
                 builder.setPiece(piece);
             }
-            if(this.movedPiece.isFirstMove()) {
-                this.movedPiece.Moved();    
-            }
             final Pawn movedPawn = (Pawn) this.movedPiece.movePiece(this);
             builder.setPiece(movedPawn);
             builder.setEnPassantPawn(movedPawn);
             builder.setMoveMaker(this.board.currentPlayer().getOpponent().getSide());
-            builder.setMoveTransition(this);
             return builder.build();
         }
     }    
+    
+    public static class PawnPromotion extends Move {
+        final Move promotionMove;
+        final Pawn promotedPawn;
 
+        public PawnPromotion(final Move promotionMove) {
+            super(promotionMove.getBoard(), promotionMove.getMovedPiece(), promotionMove.getDestination());
+            this.promotionMove = promotionMove;
+            this.promotedPawn = (Pawn) promotionMove.getMovedPiece();
+        }
+        
+                @Override
+        public Board execute() {
+            final Board pawnMovedBoard = this.promotionMove.execute();
+            final Builder builder = new Builder();
+            for(final Piece piece : this.board.currentPlayer().getActivePieces()) {
+                if(!this.movedPiece.equals(piece)) {
+                    builder.setPiece(piece);
+                }
+            }
+            for(final Piece piece : this.board.currentPlayer().getOpponent().getActivePieces()) {
+                if(piece.getPosition() != this.movedPiece.getPosition()) {
+                    builder.setPiece(piece);
+                }
+            }
+            builder.setPiece(this.promotedPawn.getPromotionPiece().movePiece(this));
+            builder.setMoveMaker(pawnMovedBoard.currentPlayer().getSide());
+            return builder.build();
+        }
+    }
     /**
      * Class for the castling move of the rook and king.
      */
@@ -241,10 +234,6 @@ public abstract class Move {
             this.rook = rook;
             this.rookStart = rookStart;
             this.rookDestination = rookDestination;
-        }
-
-        public Rook getCastleRook() {
-            return this.rook;
         }
         
         @Override
@@ -262,12 +251,10 @@ public abstract class Move {
             }
             for(final Piece piece : this.board.currentPlayer().getOpponent().getActivePieces()) {
                 builder.setPiece(piece);
-            }
-            this.movedPiece.Moved();    
+            }    
             builder.setPiece(this.movedPiece.movePiece(this));
             builder.setPiece(new Rook(this.rookDestination, this.rook.getPieceSide(), false));
             builder.setMoveMaker(this.board.currentPlayer().getOpponent().getSide());
-            builder.setMoveTransition(this);
             return builder.build();
         } 
     }
@@ -283,6 +270,11 @@ public abstract class Move {
         @Override
             public Board execute() {
                 throw new RuntimeException("Cannot execute a move that doesn't exist");
+            }
+            
+        @Override
+            public String toString() {
+                return "Move doesn't exist";
             }
     }    
     
@@ -312,6 +304,7 @@ public abstract class Move {
     }
     
     public String toString() {
-        return  this.movedPiece.toString() + " moved on " + this.destinationCoordinate;
+        return  "Piece " + this.movedPiece.toString() + " moved from " + BoardUtility.getPositionAtCoordinate(this.movedPiece.getPosition())
+                + " to " + BoardUtility.getPositionAtCoordinate(this.destinationCoordinate);
     }
 }

@@ -5,7 +5,7 @@
  */
 package fi.helsinki.chessai.board.pieces;
 
-import fi.helsinki.chessai.utility.PieceUtil;
+import fi.helsinki.chessai.utility.PieceUtility;
 import fi.helsinki.chessai.board.Move;
 import fi.helsinki.chessai.Side;
 import fi.helsinki.chessai.board.Board;
@@ -16,7 +16,7 @@ import fi.helsinki.chessai.utility.MyList;
  * @author janne
  */
 public class Rook extends Piece{
-        private final static int[] PossibleMoveVectors = {-8, -1, 1, 8};
+        private final static int[] MOVE_VECTORS = {-8, -1, 1, 8};
     
     /**
      * Constructor
@@ -35,12 +35,12 @@ public class Rook extends Piece{
      */
     @Override
     public MyList<Move> getLegalMoves(Board board) {
-        return PieceUtil.getLegalVectorMoves(board, this, PossibleMoveVectors);    
+        return PieceUtility.getLegalVectorMoves(board, this, MOVE_VECTORS);    
     }
 
     @Override
     public Rook movePiece(final Move move) {
-        return new Rook(move.getDestination(), move.getMovedPiece().getPieceSide(), move.getMovedPiece().isFirstMove());
+        return new Rook(move.getDestination(), move.getMovedPiece().getPieceSide(), false);
     }
     
     @Override

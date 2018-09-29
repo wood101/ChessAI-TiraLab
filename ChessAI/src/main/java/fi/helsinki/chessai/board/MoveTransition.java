@@ -6,7 +6,7 @@
 package fi.helsinki.chessai.board;
 
 /**
- * Class for the active movement happening on the board.
+ * Class for the transitioning of an old board to the new board because of piece movement.
  * @author janne
  */
 public class MoveTransition {

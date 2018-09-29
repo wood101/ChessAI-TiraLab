@@ -19,7 +19,7 @@ Learned to code my own List
 
 ## Problems?
 
-Even less time than last week. Had a lot of bugs to crush, which took a lot of time.
+Even less time than last week. Had a lot of bugs to crush, which took a lot of time. Still have not started coding the bot.
 
 ## What is next?
 

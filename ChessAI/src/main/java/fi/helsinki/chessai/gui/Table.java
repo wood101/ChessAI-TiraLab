@@ -19,9 +19,6 @@ import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -40,7 +37,7 @@ import javax.swing.border.Border;
  */
 public class Table {
     private final JFrame frame;
-    private final BoardPanel panel;
+    private BoardPanel panel;
     private Board chessBoard;
     private Tile sourceTile;
     private Tile destinationTile;
@@ -59,12 +56,19 @@ public class Table {
         final JMenuBar menu = createMenu();
         this.frame.setJMenuBar(menu);
         this.frame.setSize(FRAME);
-        this.chessBoard = Board.createStandardBoard();
-        this.panel = new BoardPanel();
-        this.frame.add(panel, BorderLayout.CENTER);
+        initializeGame();
         this.frame.setLocationRelativeTo(null);
         this.frame.setVisible(true);
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+    
+    /**
+     * Initializes the chess board for a new game.
+     */
+    private void initializeGame() {
+        this.chessBoard = Board.createStandardBoard();
+        this.panel = new BoardPanel();
+        this.frame.add(panel, BorderLayout.CENTER);
     }
     
     /**
@@ -84,13 +88,15 @@ public class Table {
     private JMenu createFileMenu() {
         final JMenu fileMenu = new JMenu("File");
         final JMenuItem exitMenuItem = new JMenuItem("Exit");
-        exitMenuItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.exit(0);
-            }
+        exitMenuItem.addActionListener((ActionEvent e) -> {
+            System.exit(0);
         });
         fileMenu.add(exitMenuItem);
+        final JMenuItem restartMenuItem = new JMenuItem("Restart");
+        restartMenuItem.addActionListener((ActionEvent e) -> {
+            initializeGame();
+        });
+        fileMenu.add(restartMenuItem);
         return fileMenu;
     }
     
@@ -98,11 +104,11 @@ public class Table {
      * Class for the 8 x 8 grid of panels for chess.
      */
     private class BoardPanel extends JPanel {
-        final List<TilePanel> boardTiles;
+        final MyList<TilePanel> boardTiles;
         
         BoardPanel() {
             super(new GridLayout(8,8));
-            this.boardTiles = new ArrayList<>();
+            this.boardTiles = new MyList<>();
             for(int i = 0; i < 64; i++) {
                 final TilePanel tilePanel = new TilePanel(this, i);
                 this.boardTiles.add(tilePanel);
@@ -149,7 +155,7 @@ public class Table {
                     if(isRightMouseButton(me)) {
                         clearState();
                     } else if(isLeftMouseButton(me))
-                        if(sourceTile == null || humanMovedPiece != chessBoard.getTile(tileId).getPiece() && chessBoard.getTile(tileId).occupied() && chessBoard.getTile(tileId).getPiece().getPieceSide() == humanMovedPiece.getPieceSide()) {
+                        if(sourceTile == null) {
                             sourceTile = chessBoard.getTile(tileId);
                             humanMovedPiece = sourceTile.getPiece();
                             if(humanMovedPiece == null) {
@@ -158,9 +164,12 @@ public class Table {
                         } else {
                             destinationTile = chessBoard.getTile(tileId);
                             final Move move = Move.MoveFactory.createMove(chessBoard, sourceTile.getTileCoordinate(), destinationTile.getTileCoordinate());
-                            final MoveTransition transition = chessBoard.currentPlayer().makeMove(move);
-                            if(transition.getMoveStatus().isDone()) {
-                                chessBoard = (Board) transition.getBoard();
+                            MoveTransition transition;
+                            if(!move.equals(Move.NULL_MOVE)) {
+                                transition = chessBoard.currentPlayer().makeMove(move);
+                                if(transition.getMoveStatus().isDone()) {
+                                    chessBoard = (Board) transition.getBoard();
+                                }
                             }
                         clearState();
                         }

@@ -13,8 +13,6 @@ import fi.helsinki.chessai.board.pieces.Piece;
 import fi.helsinki.chessai.board.pieces.Piece.PieceType;
 import fi.helsinki.chessai.board.pieces.Rook;
 import fi.helsinki.chessai.utility.MyList;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * The class for the player of the black pieces.
@@ -45,6 +43,7 @@ public class WhitePlayer extends Player {
     @Override
     protected MyList<Move> kingCastles(MyList<Move> currectPlayerMoves, MyList<Move> opponentMoves) {
         final MyList<Move> kingCastles = new MyList<>();
+        //King side castle
         if(this.playerKing.isFirstMove() && !this.isInCheck()) {
             if(!this.board.getTile(61).occupied() && !this.board.getTile(62).occupied()) {
                 final Tile rookTile = this.board.getTile(63);
@@ -55,6 +54,7 @@ public class WhitePlayer extends Player {
                     
                 }
             }
+            //Queen side castle
             if(!this.board.getTile(59).occupied() && !this.board.getTile(58).occupied() && !this.board.getTile(57).occupied()) {
                 final Tile rookTile = this.board.getTile(56);
                 if(rookTile.occupied() && rookTile.getPiece().isFirstMove()) {

@@ -1,6 +1,6 @@
 package fi.helsinki.chessai.board.pieces;
 
-import fi.helsinki.chessai.utility.PieceUtil;
+import fi.helsinki.chessai.utility.PieceUtility;
 import fi.helsinki.chessai.board.Move;
 import fi.helsinki.chessai.Side;
 import fi.helsinki.chessai.board.Board;
@@ -11,7 +11,7 @@ import fi.helsinki.chessai.utility.MyList;
  * @author janne
  */
 public class Bishop extends Piece {
-    private final static int[] PossibleMoveVectors = {-9, -7, 7, 9};
+    private final static int[] MOVE_VECTORS = {-9, -7, 7, 9};
     
     /**
      * Constructor
@@ -30,7 +30,7 @@ public class Bishop extends Piece {
      */
     @Override
     public MyList<Move> getLegalMoves(Board board) {
-        return PieceUtil.getLegalVectorMoves(board, this, PossibleMoveVectors);    
+        return PieceUtility.getLegalVectorMoves(board, this, MOVE_VECTORS);    
     }
     
     @Override
@@ -40,6 +40,6 @@ public class Bishop extends Piece {
 
     @Override
     public Piece movePiece(final Move move) {
-        return new Bishop(move.getDestination(), move.getMovedPiece().getPieceSide(), move.getMovedPiece().isFirstMove());
+        return new Bishop(move.getDestination(), move.getMovedPiece().getPieceSide(), false);
     }
 }
