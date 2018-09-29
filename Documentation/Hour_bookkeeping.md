@@ -10,6 +10,7 @@
 | 21.9. | 9    | More moves, some of the graphichal interface, players |
 | 27.9. | 2    | Bug fixing |
 | 28.9. | 11    | More bug fixing, finished gui, my own list, documentation, some tests |
+| 29.9. | 9    | Bug fixing, some tests, implemented AI |
 
 <br>
-Total hours: 32
+Total hours: 41
