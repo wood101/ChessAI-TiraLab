@@ -12,7 +12,7 @@ The chess pieces are moved with the mouse by clicking the piece and a legal spot
 
 ## Time complexity
 
-According to [this](https://cis.temple.edu/~vasilis/Courses/CIS603/Lectures/l7.html)
+According to [this](https://cis.temple.edu/~vasilis/Courses/CIS603/Lectures/l7.html),
 the Minimax algorithm has a time complexity of O(b^m), where b is the number of possible moves and m is the maximum depth of the tree that the algorithm travels in finding the solution.
 
 With alpha-beta pruning the time complexity is cut down to Ω(b^(m/2). Worst case stays the same.
