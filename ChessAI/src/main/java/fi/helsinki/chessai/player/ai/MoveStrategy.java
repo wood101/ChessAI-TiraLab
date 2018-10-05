@@ -9,6 +9,5 @@ import fi.helsinki.chessai.board.Move;
  * @author janne
  */
 public interface MoveStrategy {
-    
     Move execute(Board board);
 }

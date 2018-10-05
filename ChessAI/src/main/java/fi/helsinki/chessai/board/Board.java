@@ -11,9 +11,7 @@ import fi.helsinki.chessai.player.BlackPlayer;
 import fi.helsinki.chessai.player.Player;
 import fi.helsinki.chessai.player.WhitePlayer;
 import fi.helsinki.chessai.utility.MyList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -21,27 +19,29 @@ import java.util.Map;
  * @author janne
  */
 public final class Board {
-    private final List<Tile> gameboard;
+    private final MyList<Tile> gameboard;
     private final MyList<Piece> whitePieces;
     private final MyList<Piece> blackPieces;
     private final WhitePlayer whitePlayer;
     private final BlackPlayer blackPlayer;
     private final Player currentPlayer;
     private final Pawn enPassantPawn;
+    private final MyList<Board> boardHistory;
     
     /**
      * Constructor utilizing the builder class.
      * @param builder 
      */
     private Board(final Builder builder) {
+        this.boardHistory = builder.boardHistory;
         this.gameboard = createBoard(builder);
+        this.enPassantPawn = builder.enPassantPawn;
         this.whitePieces = activePieces(this.gameboard, Side.WHITE);
         this.blackPieces = activePieces(this.gameboard, Side.BLACK);
         final MyList<Move> whiteLegalMoves = legalMovesForPieces(this.whitePieces);
         final MyList<Move> blackLegalMoves = legalMovesForPieces(this.blackPieces);
         this.whitePlayer = new WhitePlayer(this, whiteLegalMoves, blackLegalMoves);
         this.blackPlayer = new BlackPlayer(this, blackLegalMoves, whiteLegalMoves);
-        this.enPassantPawn = builder.enPassantPawn;
         this.currentPlayer = builder.nextMoveMaker.choosePlayer(this.whitePlayer, this.blackPlayer);
     }
     
@@ -59,12 +59,12 @@ public final class Board {
      * @param builder
      * @return List of tiles
      */
-    private static List<Tile> createBoard(final Builder builder) {
-        final Tile[] tiles = new Tile[64];
+    private static MyList<Tile> createBoard(final Builder builder) {
+        final MyList<Tile> list = new MyList<>();
         for (int i = 0; i < 64; i++) {
-            tiles[i] = Tile.createTile(i, builder.boardConfig.get(i));
+            list.add(Tile.createTile(i, builder.boardConfig.get(i)));
         }
-        return Arrays.asList(tiles);
+        return list;
     }
     
     /**
@@ -109,7 +109,7 @@ public final class Board {
      * @param side 
      * @return 
      */
-    public MyList<Piece> activePieces(final List<Tile> gameboard, final Side side) {
+    public MyList<Piece> activePieces(final MyList<Tile> gameboard, final Side side) {
         final MyList<Piece> activePieces = new MyList<>();
         
         for(final Tile tile : gameboard) {
@@ -194,6 +194,18 @@ public final class Board {
         return this.enPassantPawn;
     }
 
+    /**
+     * Returns the recent boards.
+     * @return 
+     */
+    public MyList<Board> getBoardHistory() {
+        return this.boardHistory;
+    }
+    
+    /**
+     * Returns all the pieces currently on the board.
+     * @return 
+     */
     public MyList<Piece> getAllPieces() {
         MyList<Piece> list = this.getBlackPieces();
         list.addAll(this.getWhitePieces());
@@ -207,8 +219,8 @@ public final class Board {
         
         private Map<Integer, Piece> boardConfig;
         private Side nextMoveMaker;
-        private Move transitionMove;
         private Pawn enPassantPawn;
+        private MyList<Board> boardHistory;
         
         public Builder() {
             this.boardConfig = new HashMap<>();
@@ -233,7 +245,19 @@ public final class Board {
             return this;
         }
         
-
+        /**
+         * Keeps track of old boards for stalemates.
+         * @param board 
+         * @return  
+         */
+        public Builder addOldBoard(final Board board) {
+            if(board.getBoardHistory() == null) this.boardHistory = new MyList();
+            else this.boardHistory = board.getBoardHistory();
+            if(this.boardHistory.size() == 6) this.boardHistory.remove(0);
+            this.boardHistory.add(board);
+            return this;
+        }
+        
         /**
          * Sets the en passant pawn if that move was executed.
          * @param enPassantPawn

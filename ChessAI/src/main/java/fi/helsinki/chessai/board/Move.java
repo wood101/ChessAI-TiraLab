@@ -98,6 +98,7 @@ public abstract class Move {
     public Board execute() {
         final Builder builder = new Builder();
         setPiecesOnNewBuild(builder, this);
+        builder.addOldBoard(this.board);
         builder.setPiece(this.movedPiece.movePiece(this));
         builder.setMoveMaker(this.board.currentPlayer().getOpponent().getSide());
         return builder.build();
@@ -134,16 +135,10 @@ public abstract class Move {
         @Override
         public Board execute() {
             final Builder builder = new Builder();
-            for(final Piece piece : this.board.currentPlayer().getActivePieces()) {
-                if(!this.movedPiece.equals(piece)) {
+            for(final Piece piece : this.board.getAllPieces()) {
+                if(movedPiece.getPosition() != piece.getPosition() && attackedPiece.getPosition() != piece.getPosition()) {
                     builder.setPiece(piece);
                 }
-            }
-            for(final Piece piece : this.board.currentPlayer().getOpponent().getActivePieces()) {
-                if(!this.board.getEnPassantPawn().equals(piece)) {
-                    builder.setPiece(piece);   
-                }
-                
             }
             final Pawn movedPawn = (Pawn) this.movedPiece.movePiece(this);
             builder.setPiece(movedPawn);
@@ -172,6 +167,10 @@ public abstract class Move {
         }
     }    
     
+    /**
+     * Class for the pawn promotion special move.
+     * Always promotes to queen since it is 99% of the time the best move.
+     */
     public static class  PawnPromotion extends Move {
         final Move promotionMove;
         final Pawn promotedPawn;

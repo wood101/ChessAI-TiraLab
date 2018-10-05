@@ -23,8 +23,6 @@ import java.io.IOException;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.concurrent.ExecutionException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -33,6 +31,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
@@ -63,10 +62,13 @@ public class Table extends Observable {
     private Table() {
         this.frame = new JFrame("Chess");
         this.frame.setLayout(new BorderLayout());
-        final JMenuBar menu = createMenu();
-        this.frame.setJMenuBar(menu);
+        this.frame.setJMenuBar(createMenu());
         this.frame.setSize(FRAME);
-        initializeGame();
+        this.addObserver(new TableGameAIWatcher());
+        this.chessBoard = Board.createStandardBoard();
+        this.gameSetup = new GameSetup(this.frame).getGameSetup();
+        this.panel = new BoardPanel();
+        this.frame.add(panel, BorderLayout.CENTER);
         this.frame.setLocationRelativeTo(null);
         this.frame.setVisible(true);
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -81,8 +83,7 @@ public class Table extends Observable {
      */
     private void initializeGame() {
         this.chessBoard = Board.createStandardBoard();
-        this.addObserver(new TableGameAIWatcher());
-        this.gameSetup = new GameSetup(this.frame, true);
+        this.gameSetup = new GameSetup(this.frame).getGameSetup();
         this.panel = new BoardPanel();
         this.frame.add(panel, BorderLayout.CENTER);
     }
@@ -131,6 +132,21 @@ public class Table extends Observable {
         optionsMenu.add(setupGameMenuItem);
         return optionsMenu;
     }
+    
+    /**
+     * Gives a popup message window if the game has ended.
+     */
+    private void checkGameEnd() {
+        if(Table.get().getGameBoard().currentPlayer().isInCheckMate()) {
+            JOptionPane.showMessageDialog(Table.get().getBoardPanel(), "Game Over: " +
+            Table.get().getGameBoard().currentPlayer() + " is in checkmate!",
+            "Game Over", JOptionPane.INFORMATION_MESSAGE);
+        }
+        if(Table.get().getGameBoard().currentPlayer().isInStaleMate()) {
+            JOptionPane.showMessageDialog(Table.get().getBoardPanel(), "Game Over: the game ended in a stalemate!",
+            "Game Over", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
 
     private GameSetup getGameSetup() {
         return this.gameSetup;
@@ -165,7 +181,7 @@ public class Table extends Observable {
      * Notifies the computer of a move that happened.
      * @param playerType 
      */
-    private void updateAfterMove(PlayerType playerType) {
+    public void updateAfterMove(PlayerType playerType) {
         setChanged();
         notifyObservers(playerType);
     }
@@ -193,18 +209,12 @@ public class Table extends Observable {
                 final AIThinkTank thinkTank = new AIThinkTank();
                 thinkTank.execute();
             }
-            
-            if(Table.get().getGameBoard().currentPlayer().isInCheckMate()) {
-                System.out.println("Game over! "+ Table.get().getGameBoard().currentPlayer() + " is in checkmate!");
-            }
-            if(Table.get().getGameBoard().currentPlayer().isInStaleMate()) {
-                System.out.println("Game over! "+ Table.get().getGameBoard().currentPlayer() + " is in stalemate!");
-            }
+            Table.get().checkGameEnd();
         }
         
     }
     /**
-     * Class that activates the algorithm of the AI.
+     * Class that activates the algorithm of the AI after rendering player movement.
      */
     private static class AIThinkTank extends SwingWorker<Move, String> {
         public AIThinkTank() {
@@ -216,7 +226,7 @@ public class Table extends Observable {
          */
         @Override
         protected Move doInBackground() throws Exception {
-            final MoveStrategy miniMax = new MiniMax(4);
+            final MoveStrategy miniMax = new MiniMax(Table.get().getGameSetup().getSearchDepth());
             final Move bestMove = miniMax.execute(Table.get().getGameBoard());
             return bestMove;
         }
@@ -306,6 +316,8 @@ public class Table extends Observable {
                             if(humanMovedPiece == null) {
                                 sourceTile = null;
                             }
+                        } else if (!humanMovedPiece.getPieceSide().equals(chessBoard.currentPlayer().getSide())){
+                            clearState();
                         } else {
                             destinationTile = chessBoard.getTile(tileId);
                             final Move move = Move.MoveFactory.createMove(chessBoard, sourceTile.getTileCoordinate(), destinationTile.getTileCoordinate());
@@ -316,13 +328,12 @@ public class Table extends Observable {
                                     chessBoard = (Board) transition.getBoard();
                                 }
                             }
-                        clearState();
+                            clearState();
                         }
                     SwingUtilities.invokeLater(() -> {
-                        if(gameSetup.isAIPlayer(chessBoard.currentPlayer())) {
-                            Table.get().updateAfterMove(PlayerType.HUMAN);
-                        }
+                        Table.get().updateAfterMove(PlayerType.HUMAN);
                         panel.drawBoard(chessBoard);
+                        checkGameEnd();
                     });
                 }
 

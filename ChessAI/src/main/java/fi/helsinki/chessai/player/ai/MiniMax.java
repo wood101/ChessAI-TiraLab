@@ -3,6 +3,7 @@ package fi.helsinki.chessai.player.ai;
 import fi.helsinki.chessai.board.Board;
 import fi.helsinki.chessai.board.Move;
 import fi.helsinki.chessai.board.MoveTransition;
+import fi.helsinki.chessai.utility.MyList;
 
 /**
  * Class for the Minimax algorithm.
@@ -12,6 +13,7 @@ public class MiniMax implements MoveStrategy {
 
     private final BoardEvaluator evaluator;
     private final int searchDepth;
+    private MyList<MoveTransition> previousTransitions = new MyList<>();
     
     public MiniMax(final int searchDepth) {
         this.evaluator = new StandardEvaluator();
@@ -25,8 +27,9 @@ public class MiniMax implements MoveStrategy {
      */
     @Override
     public Move execute(Board board) {
+        System.out.println("Thinking with depth " +this.searchDepth);
         final long startTime = System.currentTimeMillis();
-        Move bestMove = null;
+        Move bestMove = Move.NULL_MOVE;
         int max = Integer.MIN_VALUE;
         int min = Integer.MAX_VALUE;
         int value; 
@@ -45,6 +48,7 @@ public class MiniMax implements MoveStrategy {
             }
         }
         final long executionTime = System.currentTimeMillis() - startTime;
+        System.out.println("Move executed in " + executionTime + " milliseconds");
         return bestMove;
     }
     

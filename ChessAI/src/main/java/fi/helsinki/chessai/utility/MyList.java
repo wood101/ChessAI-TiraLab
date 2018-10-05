@@ -122,11 +122,14 @@ public class MyList<E> implements Iterable<E> {
      * @return 
      */
     public boolean contains(E e) {
-        for(E ex : this) {
+        if (e == null) {
+            return false;
+        }
+        for (E ex : this) {
             if(e.equals(ex)) return true;
         }
         return false;
-    }
+    }  
     
     /**
      * Returns the iterator.
@@ -136,7 +139,6 @@ public class MyList<E> implements Iterable<E> {
     public Iterator<E> iterator() {
         return new MyListIterator();
     }
-
 
     /**
      * Iterator for the class.

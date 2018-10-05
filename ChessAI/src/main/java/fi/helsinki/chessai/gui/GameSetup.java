@@ -11,7 +11,6 @@ import fi.helsinki.chessai.player.Player;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 /**
  * Class for the setup option.
  * @author janne
@@ -20,7 +19,7 @@ class GameSetup extends JDialog {
 
     private PlayerType whitePlayerType;
     private PlayerType blackPlayerType;
-    private JSpinner searchDepthSpinner;
+    private final JSpinner searchDepthSpinner;
 
     private static final String HUMAN_TEXT = "Human";
     private static final String COMPUTER_TEXT = "Computer";
@@ -28,17 +27,15 @@ class GameSetup extends JDialog {
     /**
      * Constructor that creates the visible buttons and text.
      * @param frame
-     * @param modal 
      */
-    GameSetup(final JFrame frame,
-              final boolean modal) {
-        super(frame, modal);
+    GameSetup(final JFrame frame) {
         final JPanel myPanel = new JPanel(new GridLayout(0, 1));
         final JRadioButton whiteHumanButton = new JRadioButton(HUMAN_TEXT);
         final JRadioButton whiteComputerButton = new JRadioButton(COMPUTER_TEXT);
         final JRadioButton blackHumanButton = new JRadioButton(HUMAN_TEXT);
         final JRadioButton blackComputerButton = new JRadioButton(COMPUTER_TEXT);
         whiteHumanButton.setActionCommand(HUMAN_TEXT);
+        
         final ButtonGroup whiteGroup = new ButtonGroup();
         whiteGroup.add(whiteHumanButton);
         whiteGroup.add(whiteComputerButton);
@@ -47,7 +44,7 @@ class GameSetup extends JDialog {
         final ButtonGroup blackGroup = new ButtonGroup();
         blackGroup.add(blackHumanButton);
         blackGroup.add(blackComputerButton);
-        blackHumanButton.setSelected(true);
+        blackComputerButton.setSelected(true);
 
         getContentPane().add(myPanel);
         myPanel.add(new JLabel("White"));
@@ -57,23 +54,24 @@ class GameSetup extends JDialog {
         myPanel.add(blackHumanButton);
         myPanel.add(blackComputerButton);
 
-        this.searchDepthSpinner = addLabeledSpinner(myPanel, "Search Depth of AI", new SpinnerNumberModel(6, 0, Integer.MAX_VALUE, 1));
+        this.searchDepthSpinner = addLabeledSpinner(myPanel, "Search Depth of AI", new SpinnerNumberModel(4, 0, Integer.MAX_VALUE, 1));
 
         final JButton cancelButton = new JButton("Cancel");
         final JButton okButton = new JButton("OK");
 
-        okButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                whitePlayerType = whiteComputerButton.isSelected() ? PlayerType.COMPUTER : PlayerType.HUMAN;
-                blackPlayerType = blackComputerButton.isSelected() ? PlayerType.COMPUTER : PlayerType.HUMAN;
-                GameSetup.this.setVisible(false);
+        okButton.addActionListener((ActionEvent e) -> {
+            if(whiteComputerButton.isSelected()) {
+                whitePlayerType = PlayerType.COMPUTER;
+                Table.get().updateAfterMove(whitePlayerType);
+            } else {
+                whitePlayerType = PlayerType.HUMAN;
             }
+            blackPlayerType = blackComputerButton.isSelected() ? PlayerType.COMPUTER : PlayerType.HUMAN;
+            GameSetup.this.setVisible(false);
         });
 
-        cancelButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                GameSetup.this.setVisible(false);
-            }
+        cancelButton.addActionListener((ActionEvent e) -> {
+            GameSetup.this.setVisible(false);
         });
 
         myPanel.add(cancelButton);
@@ -83,6 +81,7 @@ class GameSetup extends JDialog {
         pack();
         setVisible(false);
     }
+    
     /**
      * Turns the setup bar visible.
      */
@@ -134,5 +133,9 @@ class GameSetup extends JDialog {
      */
     int getSearchDepth() {
         return (Integer)this.searchDepthSpinner.getValue();
+    }
+    
+    public GameSetup getGameSetup() {
+        return this;
     }
 }

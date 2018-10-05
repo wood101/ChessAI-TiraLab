@@ -114,8 +114,19 @@ public abstract class Player {
      * @return 
      */
     public boolean isInStaleMate() {
-        return !this.isInCheck && !hasMoves() && this.getActivePieces().size() == 1 && this.getOpponent().getActivePieces().size() == 1;
+        return !this.isInCheck && !hasMoves() || this.getActivePieces().size() == 1 && this.getOpponent().getActivePieces().size() == 1;
     }
+    
+    /* TODO
+    public boolean checkBoardRepetition() {
+        if(this.board.getBoardHistory() == null) return false;
+        int count = 0;
+        for(Board oldBoard : this.board.getBoardHistory()) {
+            if(oldBoard.equals(this.board)) count++;
+        }
+        return count>2;
+    }
+    */
     
     /**
      * Returns true if the king is able to escape check.

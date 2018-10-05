@@ -12,6 +12,7 @@
 | 28.9. | 11    | More bug fixing, finished gui, my own list, documentation, some tests |
 | 29.9. | 9    | Bug fixing, some tests, implemented AI |
 | 29.9. | 2    | Cleaning the code |
+| 5.10. | 7    | Fixed most of the bugs, added some testing |
 
 <br>
-Total hours: 43
+Total hours: 50
