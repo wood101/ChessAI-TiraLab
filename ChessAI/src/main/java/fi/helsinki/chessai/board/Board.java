@@ -26,22 +26,24 @@ public final class Board {
     private final BlackPlayer blackPlayer;
     private final Player currentPlayer;
     private final Pawn enPassantPawn;
-    private final MyList<Board> boardHistory;
+    private final Board oldBoard;
+    private MyList<Board> boardHistory;
     
     /**
      * Constructor utilizing the builder class.
      * @param builder 
      */
     private Board(final Builder builder) {
-        this.boardHistory = builder.boardHistory;
+        this.oldBoard = builder.oldBoard;
         this.gameboard = createBoard(builder);
         this.enPassantPawn = builder.enPassantPawn;
         this.whitePieces = activePieces(this.gameboard, Side.WHITE);
         this.blackPieces = activePieces(this.gameboard, Side.BLACK);
         final MyList<Move> whiteLegalMoves = legalMovesForPieces(this.whitePieces);
         final MyList<Move> blackLegalMoves = legalMovesForPieces(this.blackPieces);
-        this.whitePlayer = new WhitePlayer(this, whiteLegalMoves, blackLegalMoves);
-        this.blackPlayer = new BlackPlayer(this, blackLegalMoves, whiteLegalMoves);
+        this.boardHistory = constructBoardHistory();
+        this.whitePlayer = new WhitePlayer(this, whiteLegalMoves, blackLegalMoves, this.boardHistory);
+        this.blackPlayer = new BlackPlayer(this, blackLegalMoves, whiteLegalMoves, this.boardHistory);
         this.currentPlayer = builder.nextMoveMaker.choosePlayer(this.whitePlayer, this.blackPlayer);
     }
     
@@ -52,6 +54,10 @@ public final class Board {
      */
     public Tile getTile(final int tileCoordinate) {
         return gameboard.get(tileCoordinate);
+    }
+    
+    public MyList<Board> getBoardHistory() {
+        return this.boardHistory;
     }
     
     /**
@@ -65,6 +71,18 @@ public final class Board {
             list.add(Tile.createTile(i, builder.boardConfig.get(i)));
         }
         return list;
+    }
+    
+    private MyList<Board> constructBoardHistory() {
+        if(this.oldBoard == null) return null;
+        if(this.oldBoard.boardHistory == null) {
+            this.boardHistory = new MyList<>();
+        } else {
+            this.boardHistory = this.oldBoard.getBoardHistory();
+        }
+        if(this.boardHistory.size() > 5) this.boardHistory.remove(0);
+        this.boardHistory.add(this.oldBoard);
+        return this.boardHistory;
     }
     
     /**
@@ -193,14 +211,6 @@ public final class Board {
     public Pawn getEnPassantPawn() {
         return this.enPassantPawn;
     }
-
-    /**
-     * Returns the recent boards.
-     * @return 
-     */
-    public MyList<Board> getBoardHistory() {
-        return this.boardHistory;
-    }
     
     /**
      * Returns all the pieces currently on the board.
@@ -220,7 +230,7 @@ public final class Board {
         private Map<Integer, Piece> boardConfig;
         private Side nextMoveMaker;
         private Pawn enPassantPawn;
-        private MyList<Board> boardHistory;
+        private Board oldBoard;
         
         public Builder() {
             this.boardConfig = new HashMap<>();
@@ -246,15 +256,12 @@ public final class Board {
         }
         
         /**
-         * Keeps track of old boards for stalemates.
-         * @param board 
+         * Keeps track of the previous board for stalemate checking.
+         * @param oldBoard
          * @return  
          */
-        public Builder addOldBoard(final Board board) {
-            if(board.getBoardHistory() == null) this.boardHistory = new MyList();
-            else this.boardHistory = board.getBoardHistory();
-            if(this.boardHistory.size() == 6) this.boardHistory.remove(0);
-            this.boardHistory.add(board);
+        public Builder addOldBoard(final Board oldBoard) {
+            this.oldBoard = oldBoard;
             return this;
         }
         

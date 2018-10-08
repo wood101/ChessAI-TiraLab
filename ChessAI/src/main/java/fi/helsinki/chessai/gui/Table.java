@@ -141,10 +141,12 @@ public class Table extends Observable {
             JOptionPane.showMessageDialog(Table.get().getBoardPanel(), "Game Over: " +
             Table.get().getGameBoard().currentPlayer() + " is in checkmate!",
             "Game Over", JOptionPane.INFORMATION_MESSAGE);
+            initializeGame();
         }
         if(Table.get().getGameBoard().currentPlayer().isInStaleMate()) {
             JOptionPane.showMessageDialog(Table.get().getBoardPanel(), "Game Over: the game ended in a stalemate!",
             "Game Over", JOptionPane.INFORMATION_MESSAGE);
+            initializeGame();
         }
     }
 
@@ -331,9 +333,8 @@ public class Table extends Observable {
                             clearState();
                         }
                     SwingUtilities.invokeLater(() -> {
-                        Table.get().updateAfterMove(PlayerType.HUMAN);
                         panel.drawBoard(chessBoard);
-                        checkGameEnd();
+                        Table.get().updateAfterMove(PlayerType.HUMAN);
                     });
                 }
 

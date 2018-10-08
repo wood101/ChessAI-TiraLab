@@ -38,7 +38,7 @@ public final class StandardEvaluator implements BoardEvaluator {
      * @return 
      */
     private int scorePlayer(Board board, Player player, int depth) {
-        return pieceValue(player) + mobility(player) + check(player) + checkMate(player, depth) + castled(player);
+        return pieceValue(player) + mobility(player) + check(player) + checkMate(player, depth) + castled(player) + (int) (Math.random() * 10);
     }
 
     /**

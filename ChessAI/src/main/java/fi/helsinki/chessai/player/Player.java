@@ -26,6 +26,7 @@ public abstract class Player {
     protected final MyList<Move> legalMoves;
     private final boolean isInCheck;
     private final MyList<Move> castleMoves;
+    private final MyList<Board> boardHistory;
     
     /**
      * Constructor
@@ -33,13 +34,14 @@ public abstract class Player {
      * @param legalMoves legal moves for the current player
      * @param opponentMoves legal moves of the opponent of the current player
      */
-    Player(final Board board, final MyList<Move> legalMoves, final MyList<Move> opponentMoves) {
+    Player(final Board board, final MyList<Move> legalMoves, final MyList<Move> opponentMoves, final MyList<Board> boardHistory) {
         this.board = board;
         this.playerKing = establishKing();
         this.castleMoves = kingCastles(legalMoves, opponentMoves);
         legalMoves.addAll(castleMoves);
         this.legalMoves = legalMoves;
         this.isInCheck = !Player.attacksOnTile(this.playerKing.getPosition(), opponentMoves).isEmpty();
+        this.boardHistory = boardHistory;
         
     }
     private King establishKing() {
@@ -114,15 +116,15 @@ public abstract class Player {
      * @return 
      */
     public boolean isInStaleMate() {
-        return !this.isInCheck && !hasMoves() || this.getActivePieces().size() == 1 && this.getOpponent().getActivePieces().size() == 1;
+        return !this.isInCheck && !hasMoves() || /*checkBoardRepetition() ||*/ this.getActivePieces().size() == 1 && this.getOpponent().getActivePieces().size() == 1;
     }
     
     /* TODO
     public boolean checkBoardRepetition() {
-        if(this.board.getBoardHistory() == null) return false;
+        if(this.boardHistory == null) return false;
         int count = 0;
-        for(Board oldBoard : this.board.getBoardHistory()) {
-            if(oldBoard.equals(this.board)) count++;
+        for(Board oldBoard : this.boardHistory) {
+            if(oldBoard.toString().equals(this.board.toString())) count++;
         }
         return count>2;
     }
@@ -171,6 +173,4 @@ public abstract class Player {
      * @return 
      */
     protected abstract MyList<Move> kingCastles(MyList<Move> currectPlayerMoves, MyList<Move> opponentMoves);
-
-
 }
