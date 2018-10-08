@@ -19,8 +19,8 @@ import fi.helsinki.chessai.utility.MyList;
  */
 public class BlackPlayer extends Player {
     
-    public BlackPlayer(Board board, MyList<Move> blackLegalMoves, MyList<Move> whiteLegalMoves, final MyList<Board> boardHistory) {
-        super(board, blackLegalMoves, whiteLegalMoves, boardHistory);
+    public BlackPlayer(Board board, MyList<Move> blackLegalMoves, MyList<Move> whiteLegalMoves) {
+        super(board, blackLegalMoves, whiteLegalMoves);
     }
 
     @Override

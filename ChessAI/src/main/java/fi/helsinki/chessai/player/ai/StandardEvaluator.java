@@ -13,8 +13,9 @@ public final class StandardEvaluator implements BoardEvaluator {
     private static final int CHECK_SCORE = 50;
     private static final int CHECK_MATE_SCORE = 10000;
     private static final int DEPTH_SCORE = 100;
-    private static int CASTLE_SCORE = 60;
+    private static final int CASTLE_SCORE = 60;
     private final static int MOBILITY_MULTIPLIER = 2;
+    private final int STALEMATE_SCORE = -100;
 
     public StandardEvaluator() {
     }
@@ -38,7 +39,7 @@ public final class StandardEvaluator implements BoardEvaluator {
      * @return 
      */
     private int scorePlayer(Board board, Player player, int depth) {
-        return pieceValue(player) + mobility(player) + check(player) + checkMate(player, depth) + castled(player) + (int) (Math.random() * 10);
+        return pieceValue(player) + mobility(player) + check(player) + checkMate(player, depth) + castled(player) /*+ staleMate(player) +*/ + (int) (Math.random() * 10);
     }
 
     /**
@@ -106,6 +107,16 @@ public final class StandardEvaluator implements BoardEvaluator {
      */
     private static int castled(Player player) {
         return player.isCastled() ? CASTLE_SCORE : 0;
+    }
+
+    /**
+     * Negative score for stalemate so the games stay more exiting.
+     * Seems to slow down the algorithm quite a bit.
+     * @param player
+     * @return 
+     */
+    private int staleMate(Player player) {
+        return player.isInStaleMate()? STALEMATE_SCORE : 0;
     }
     
 }

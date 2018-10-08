@@ -98,7 +98,6 @@ public abstract class Move {
     public Board execute() {
         final Builder builder = new Builder();
         setPiecesOnNewBuild(builder, this);
-        builder.addOldBoard(this.board);
         builder.setPiece(this.movedPiece.movePiece(this));
         builder.setMoveMaker(this.board.currentPlayer().getOpponent().getSide());
         return builder.build();

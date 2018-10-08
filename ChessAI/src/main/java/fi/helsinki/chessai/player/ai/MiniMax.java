@@ -3,7 +3,6 @@ package fi.helsinki.chessai.player.ai;
 import fi.helsinki.chessai.board.Board;
 import fi.helsinki.chessai.board.Move;
 import fi.helsinki.chessai.board.MoveTransition;
-import fi.helsinki.chessai.utility.MyList;
 
 /**
  * Class for the Minimax algorithm.
@@ -13,11 +12,12 @@ public class MiniMax implements MoveStrategy {
 
     private final BoardEvaluator evaluator;
     private final int searchDepth;
-    private MyList<MoveTransition> previousTransitions = new MyList<>();
+    private final boolean vsAI;
     
-    public MiniMax(final int searchDepth) {
+    public MiniMax(final int searchDepth, boolean vsAI) {
         this.evaluator = new StandardEvaluator();
         this.searchDepth = searchDepth;
+        this.vsAI = vsAI;
     }
     
     /**
@@ -58,6 +58,7 @@ public class MiniMax implements MoveStrategy {
      * @return 
      */
     private boolean gameEnd(Board board) {
+        if(vsAI) return board.currentPlayer().isInCheckMate() || board.currentPlayer().isInStaleMateVsHuman();
         return board.currentPlayer().isInCheckMate() || board.currentPlayer().isInStaleMate();
     }    
     

@@ -34,7 +34,7 @@ public class AITest {
         assertTrue(t3.getMoveStatus().isDone());
         board = (Board) t3.getBoard();
         
-        final MoveStrategy strategy = new MiniMax(4);
+        final MoveStrategy strategy = new MiniMax(4, false);
         final Move aiMove = strategy.execute(t3.getTransitionBoard());
         final Move expectedMove = Move.MoveFactory.createMove(board, BoardUtility.getCoordinateAtPosition("D8"), BoardUtility.getCoordinateAtPosition("H4"));
         assertEquals(aiMove, expectedMove);

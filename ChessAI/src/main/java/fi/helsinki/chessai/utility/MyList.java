@@ -115,7 +115,6 @@ public class MyList<E> implements Iterable<E> {
         
     }
     
-    //TODO Make faster
     /**
      * Checks if the list contains an item.
      * @param e

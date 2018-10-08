@@ -56,6 +56,7 @@ public class Table extends Observable {
     private final Color lightTileColor = Color.decode("#FFFACD");
     private final Color darkTileColor = Color.decode("#593E1A");
     private static final Table INSTANCE = new Table();
+    private MyList<Board> boardHistory;
     /**
      * Constructor
      */
@@ -85,6 +86,7 @@ public class Table extends Observable {
         this.chessBoard = Board.createStandardBoard();
         this.gameSetup = new GameSetup(this.frame).getGameSetup();
         this.panel = new BoardPanel();
+        this.boardHistory = null;
         this.frame.add(panel, BorderLayout.CENTER);
     }
     
@@ -150,6 +152,29 @@ public class Table extends Observable {
         }
     }
 
+    /**
+     * Returns true if the same board state has repeated three in the last ten boards.
+     * @return 
+     */
+    public boolean checkBoardRepetition() {
+        if(boardHistory == null) return false;
+        int count = 0;
+        for(Board oldBoard : boardHistory) {
+            if(oldBoard.toString().equals(chessBoard.toString())) count++;
+        }
+        return count>2;
+    }
+    
+    /**
+     * Adds the move to the board history for stalemate checking.
+     * @param board 
+     */
+    private void addToHistory() {
+        if(boardHistory == null) boardHistory = new MyList<>();
+        if(boardHistory.size()>9) boardHistory.remove(0);
+        boardHistory.add(chessBoard);
+    }    
+    
     private GameSetup getGameSetup() {
         return this.gameSetup;
     }
@@ -199,7 +224,7 @@ public class Table extends Observable {
     /**
      * Class for the AI reacting to the game.
      */
-    private static class TableGameAIWatcher implements Observer {
+    private class TableGameAIWatcher implements Observer {
         /**
          * Activates the AI when its turn comes.
          * @param o
@@ -218,7 +243,7 @@ public class Table extends Observable {
     /**
      * Class that activates the algorithm of the AI after rendering player movement.
      */
-    private static class AIThinkTank extends SwingWorker<Move, String> {
+    private class AIThinkTank extends SwingWorker<Move, String> {
         public AIThinkTank() {
         }
         /**
@@ -228,7 +253,7 @@ public class Table extends Observable {
          */
         @Override
         protected Move doInBackground() throws Exception {
-            final MoveStrategy miniMax = new MiniMax(Table.get().getGameSetup().getSearchDepth());
+            final MoveStrategy miniMax = new MiniMax(Table.get().getGameSetup().getSearchDepth(), Table.get().getGameSetup().vsAI());
             final Move bestMove = miniMax.execute(Table.get().getGameBoard());
             return bestMove;
         }
@@ -242,6 +267,7 @@ public class Table extends Observable {
                 final Move bestMove = get();
                 Table.get().updateGameBoard(Table.get().getGameBoard().currentPlayer().makeMove(bestMove).getTransitionBoard());
                 Table.get().getBoardPanel().drawBoard(Table.get().getGameBoard());
+                Table.get().addToHistory();
                 Table.get().updateAfterMove(PlayerType.COMPUTER);
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
@@ -328,6 +354,7 @@ public class Table extends Observable {
                                 transition = chessBoard.currentPlayer().makeMove(move);
                                 if(transition.getMoveStatus().isDone()) {
                                     chessBoard = (Board) transition.getBoard();
+                                    addToHistory();
                                 }
                             }
                             clearState();

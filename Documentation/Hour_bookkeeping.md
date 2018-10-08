@@ -13,6 +13,8 @@
 | 29.9. | 9    | Bug fixing, some tests, implemented AI |
 | 29.9. | 2    | Cleaning the code |
 | 5.10. | 7    | Fixed most of the bugs, added some testing |
+| 7.10. | 1    | Bug fix |
+| 8.10. | 2    | Implemented stalemate and tried to optimize the code around it |
 
 <br>
-Total hours: 50
+Total hours: 53

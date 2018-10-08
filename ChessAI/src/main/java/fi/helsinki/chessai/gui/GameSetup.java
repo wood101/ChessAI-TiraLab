@@ -20,6 +20,7 @@ class GameSetup extends JDialog {
     private PlayerType whitePlayerType;
     private PlayerType blackPlayerType;
     private final JSpinner searchDepthSpinner;
+    private boolean vsAI;
 
     private static final String HUMAN_TEXT = "Human";
     private static final String COMPUTER_TEXT = "Computer";
@@ -54,7 +55,7 @@ class GameSetup extends JDialog {
         myPanel.add(blackHumanButton);
         myPanel.add(blackComputerButton);
 
-        this.searchDepthSpinner = addLabeledSpinner(myPanel, "Search Depth of AI", new SpinnerNumberModel(4, 0, Integer.MAX_VALUE, 1));
+        this.searchDepthSpinner = addLabeledSpinner(myPanel, "Search Depth of AI", new SpinnerNumberModel(3, 0, Integer.MAX_VALUE, 1));
 
         final JButton cancelButton = new JButton("Cancel");
         final JButton okButton = new JButton("OK");
@@ -80,6 +81,8 @@ class GameSetup extends JDialog {
         setLocationRelativeTo(frame);
         pack();
         setVisible(false);
+        
+        vsAI = checkIfAIvsAI();
     }
     
     /**
@@ -131,11 +134,23 @@ class GameSetup extends JDialog {
      * Search depth of the minimax algorithm.
      * @return 
      */
-    int getSearchDepth() {
+    public int getSearchDepth() {
         return (Integer)this.searchDepthSpinner.getValue();
     }
     
     public GameSetup getGameSetup() {
         return this;
+    }
+
+    public boolean vsAI() {
+        return vsAI;
+    }
+
+    /**
+     * Returns true if the computer is playing against a computer player.
+     * @return 
+     */
+    private boolean checkIfAIvsAI() {
+        return whitePlayerType == PlayerType.COMPUTER && blackPlayerType == PlayerType.COMPUTER;
     }
 }
