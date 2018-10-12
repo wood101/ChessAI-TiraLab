@@ -425,8 +425,8 @@ public class Table extends Observable {
             this.removeAll();
             if(board.getTile(this.tileId).occupied()) {
                 try {
-                    BufferedImage image = ImageIO.read(new File(getClass().getClassLoader().getResource("images/pieces/" + board.getTile(this.tileId).getPiece().getPieceSide().toString().substring(0, 1) +
-                            board.getTile(tileId).getPiece().toString() + ".gif").getFile()));
+                    BufferedImage image = ImageIO.read(Table.class.getClassLoader().getResourceAsStream("images/pieces/" + board.getTile(this.tileId).getPiece().getPieceSide().toString().substring(0, 1) +
+                            board.getTile(tileId).getPiece().toString() + ".gif"));
                     add(new JLabel(new ImageIcon(image)));
                 } catch (IOException e) {
                     e.printStackTrace();
