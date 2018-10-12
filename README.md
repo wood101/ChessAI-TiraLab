@@ -20,5 +20,7 @@ Functioning chess game with an AI you can play against.
 [Week 4](http://github.com/wood101/ChessAITiraLab/blob/master/Documentation/Week4.md)
 <br>
 [Week 5](http://github.com/wood101/ChessAITiraLab/blob/master/Documentation/Week5.md)
+<br>
+[Week 6](http://github.com/wood101/ChessAITiraLab/blob/master/Documentation/Week6.md)
 
 ## [Hour bookkeeping](http://github.com/wood101/ChessAITiraLab/blob/master/Documentation/Hour_bookkeeping.md)
