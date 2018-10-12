@@ -8,7 +8,6 @@ package fi.helsinki.chessai.player;
 import fi.helsinki.chessai.board.MoveTransition;
 import fi.helsinki.chessai.Side;
 import fi.helsinki.chessai.board.Board;
-import fi.helsinki.chessai.board.MoveStatus;
 import fi.helsinki.chessai.board.pieces.King;
 import fi.helsinki.chessai.board.Move;
 import fi.helsinki.chessai.board.pieces.Piece;
@@ -149,14 +148,14 @@ public abstract class Player {
      */
     public MoveTransition makeMove(final Move move) {
         if(!isLegalMove(move)) {
-            return new MoveTransition(this.board, move, MoveStatus.ILLEGAL_MOVE);
+            return new MoveTransition(this.board, move, MoveTransition.MoveStatus.ILLEGAL_MOVE);
         }
         final Board transitionBoard = move.execute();
         final MyList<Move> kingAttacks = Player.attacksOnTile(transitionBoard.currentPlayer().getOpponent().getPlayersKing().getPosition(), transitionBoard.currentPlayer().getLegalMoves());
         if(!kingAttacks.isEmpty()) {
-            return new MoveTransition(this.board, move, MoveStatus.INCHECK);
+            return new MoveTransition(this.board, move, MoveTransition.MoveStatus.INCHECK);
         }
-        return new MoveTransition(transitionBoard, move, MoveStatus.DONE);
+        return new MoveTransition(transitionBoard, move, MoveTransition.MoveStatus.DONE);
     }
     
     
