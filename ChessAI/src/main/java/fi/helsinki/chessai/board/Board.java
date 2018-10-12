@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package fi.helsinki.chessai.board;
 
 import fi.helsinki.chessai.Side;
@@ -11,8 +6,6 @@ import fi.helsinki.chessai.player.BlackPlayer;
 import fi.helsinki.chessai.player.Player;
 import fi.helsinki.chessai.player.WhitePlayer;
 import fi.helsinki.chessai.utility.MyList;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * The class for the chessboard.
@@ -60,7 +53,10 @@ public final class Board {
     private static MyList<Tile> createBoard(final Builder builder) {
         final MyList<Tile> list = new MyList<>();
         for (int i = 0; i < 64; i++) {
-            list.add(Tile.createTile(i, builder.boardConfig.get(i)));
+            list.add(Tile.createTile(i, null));
+        }
+        for(Piece piece : builder.boardConfig) {
+            list.set(piece.getPosition(), Tile.createTile(piece.getPosition(), piece));
         }
         return list;
     }
@@ -213,12 +209,12 @@ public final class Board {
      */
     public static class Builder {
         
-        private Map<Integer, Piece> boardConfig;
+        private MyList<Piece> boardConfig;
         private Side nextMoveMaker;
         private Pawn enPassantPawn;
         
         public Builder() {
-            this.boardConfig = new HashMap<>();
+            this.boardConfig = new MyList<>();
         }
         /**
          * Place a piece on the game board.
@@ -226,7 +222,7 @@ public final class Board {
          * @return 
          */
         public Builder setPiece(final Piece piece) {
-            this.boardConfig.put(piece.getPosition(), piece);
+            this.boardConfig.add(piece);
             return this;
         }
         

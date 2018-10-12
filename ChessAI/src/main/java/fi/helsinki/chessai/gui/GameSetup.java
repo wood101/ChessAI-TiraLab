@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package fi.helsinki.chessai.gui;
 
 import fi.helsinki.chessai.Side;
@@ -11,6 +6,7 @@ import fi.helsinki.chessai.player.Player;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+
 /**
  * Class for the setup option.
  * @author janne
@@ -48,14 +44,14 @@ class GameSetup extends JDialog {
         blackComputerButton.setSelected(true);
 
         getContentPane().add(myPanel);
-        myPanel.add(new JLabel("White"));
+        myPanel.add(new JLabel("White player"));
         myPanel.add(whiteHumanButton);
         myPanel.add(whiteComputerButton);
-        myPanel.add(new JLabel("Black"));
+        myPanel.add(new JLabel("Black player"));
         myPanel.add(blackHumanButton);
         myPanel.add(blackComputerButton);
 
-        this.searchDepthSpinner = addLabeledSpinner(myPanel, "Search Depth of AI", new SpinnerNumberModel(3, 0, Integer.MAX_VALUE, 1));
+        this.searchDepthSpinner = addLabeledSpinner(myPanel, "Search Depth of AI", new SpinnerNumberModel(3, 1, 9, 1));
 
         final JButton cancelButton = new JButton("Cancel");
         final JButton okButton = new JButton("OK");

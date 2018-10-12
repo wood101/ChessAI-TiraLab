@@ -115,6 +115,10 @@ public class MyList<E> implements Iterable<E> {
         
     }
     
+    public void set(Integer key, E e) {
+        this.elements[key] = e;
+    }    
+    
     /**
      * Checks if the list contains an item.
      * @param e

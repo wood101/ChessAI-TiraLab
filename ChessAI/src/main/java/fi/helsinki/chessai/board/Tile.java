@@ -1,8 +1,7 @@
 package fi.helsinki.chessai.board;
 
 import fi.helsinki.chessai.board.pieces.Piece;
-import java.util.HashMap;
-import java.util.Map;
+import fi.helsinki.chessai.utility.MyList;
 
 /**
  * A single tile on a chessboard.
@@ -10,13 +9,18 @@ import java.util.Map;
  */
 public abstract class Tile {
     protected final int tileCoordinate;
-    private static final Map<Integer, EmptyTile> EMPTY_TILES = setAllEmptyTiles();
-    private static Map<Integer, EmptyTile> setAllEmptyTiles() {
-        final Map<Integer, EmptyTile> emptyTileMap = new HashMap<>();
+    private static final MyList<EmptyTile> EMPTY_TILES = setAllEmptyTiles();
+    
+    /**
+     * Returns a map of all empty tiles.
+     * @return 
+     */
+    private static MyList setAllEmptyTiles() {
+        final MyList<EmptyTile> emptyTileList = new MyList<>();
         for(int i = 0; i <= 64; i++) {
-            emptyTileMap.put(i, new EmptyTile(i));
+            emptyTileList.add(new EmptyTile(i));
         }
-        return emptyTileMap;
+        return emptyTileList;
     }
     /**
      * Makes a new tile.

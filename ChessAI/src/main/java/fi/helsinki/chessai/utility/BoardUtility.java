@@ -6,9 +6,7 @@
 package fi.helsinki.chessai.utility;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Utility for the board class.
@@ -16,7 +14,7 @@ import java.util.Map;
  */
 public class BoardUtility {
     public static final List<String> ALGEBRAIC_NOTATION = initializeAlgebraicNotation();
-    public static final Map<String, Integer> POSITION_TO_COORDINATE = initializePositionToCoordinateMap();
+    public static final MyList<String> POSITION_TO_COORDINATE = initializePositionToCoordinateMap();
 
 
     
@@ -74,10 +72,10 @@ public class BoardUtility {
      * Initializes the map for the algebraic notations of the board.
      * @return 
      */
-    private static Map<String, Integer> initializePositionToCoordinateMap() {
-        final Map<String, Integer> positionToCoordinate = new HashMap<>();
+    private static MyList<String> initializePositionToCoordinateMap() {
+        final MyList<String> positionToCoordinate = new MyList<>();
         for (int i = 0; i < 64; i++) {
-            positionToCoordinate.put(ALGEBRAIC_NOTATION.get(i), i);
+            positionToCoordinate.add(ALGEBRAIC_NOTATION.get(i));
         }
         return positionToCoordinate;
     }
@@ -106,7 +104,10 @@ public class BoardUtility {
      * @return 
      */
     public static int getCoordinateAtPosition(final String position) {
-        return POSITION_TO_COORDINATE.get(position);
+        for (int i = 0; i < 64; i++) {
+            if(POSITION_TO_COORDINATE.get(i).equals(position)) return i;
+        }
+        throw new RuntimeException("Game board does not fit standards");
     }
 
     /**

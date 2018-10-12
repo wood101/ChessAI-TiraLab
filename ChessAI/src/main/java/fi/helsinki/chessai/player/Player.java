@@ -50,7 +50,9 @@ public abstract class Player {
             }
         }
         //throw new RuntimeException("Game doesn't function without a king");
-        return new King(0, Side.BLACK, true, false);
+        
+        //For testing
+        return new King(-666, Side.BLACK, true, false);
     }
     
     public King getPlayersKing() {
