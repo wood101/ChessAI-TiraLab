@@ -270,7 +270,7 @@ public abstract class Move {
     }
     
     public String toString() {
-        return  "Piece " + this.movedPiece.toString() + " moved from " + BoardUtility.getPositionAtCoordinate(this.movedPiece.getPosition())
-                + " to " + BoardUtility.getPositionAtCoordinate(this.destinationCoordinate);
+        return  "Piece " + this.movedPiece.toString() + " moved from " + BoardUtility.getNotationFromCoodinate(this.movedPiece.getPosition())
+                + " to " + BoardUtility.getNotationFromCoodinate(this.destinationCoordinate);
     }
 }

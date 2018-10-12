@@ -15,7 +15,7 @@ public final class StandardEvaluator implements BoardEvaluator {
     private static final int DEPTH_SCORE = 100;
     private static final int CASTLE_SCORE = 60;
     private final static int MOBILITY_MULTIPLIER = 2;
-    private final int STALEMATE_SCORE = -100;
+    //private final int STALEMATE_SCORE = -100;
 
     public StandardEvaluator() {
     }
@@ -111,12 +111,13 @@ public final class StandardEvaluator implements BoardEvaluator {
 
     /**
      * Negative score for stalemate so the games stay more exiting.
-     * Seems to slow down the algorithm quite a bit.
      * @param player
      * @return 
      */
+    /* Seems to slow down the algorithm quite a lot and is not necessary.
     private int staleMate(Player player) {
         return player.isInStaleMate()? STALEMATE_SCORE : 0;
     }
+    */
     
 }

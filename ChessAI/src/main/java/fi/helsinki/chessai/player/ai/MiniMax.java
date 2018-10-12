@@ -109,9 +109,4 @@ public class MiniMax implements MoveStrategy {
         }
         return val;   
     }
-    
-    @Override
-    public String toString() {
-        return "MiniMax";
-    }
 }

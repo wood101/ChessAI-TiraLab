@@ -103,7 +103,7 @@ public class BoardUtility {
      * @param position
      * @return 
      */
-    public static int getCoordinateAtPosition(final String position) {
+    public static int getCoordinateFromNotation(final String position) {
         for (int i = 0; i < 64; i++) {
             if(POSITION_TO_COORDINATE.get(i).equals(position)) return i;
         }
@@ -115,7 +115,7 @@ public class BoardUtility {
      * @param coordinate
      * @return 
      */
-    public static String getPositionAtCoordinate(final int coordinate) {
+    public static String getNotationFromCoodinate(final int coordinate) {
         return ALGEBRAIC_NOTATION.get(coordinate);
     }
 }

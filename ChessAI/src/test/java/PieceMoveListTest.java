@@ -9,15 +9,12 @@ import fi.helsinki.chessai.Side;
 import fi.helsinki.chessai.board.Board;
 import fi.helsinki.chessai.board.Board.Builder;
 import fi.helsinki.chessai.board.pieces.*;
+import fi.helsinki.chessai.utility.BoardUtility;
 import fi.helsinki.chessai.utility.MyList;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
-/**
- *
- * @author janne
- */
 public class PieceMoveListTest {
     Builder boardBuilder;
     Board board;
@@ -183,11 +180,11 @@ public class PieceMoveListTest {
     
     @Test
     public void TestCastlingForWhite() {
-        boardBuilder.setPiece(new Rook(63, Side.WHITE, true));
-        boardBuilder.setPiece(new Rook(56, Side.WHITE, false));
-        boardBuilder.setPiece(new King(59, Side.WHITE, true, false));
+        boardBuilder.setPiece(new Rook(BoardUtility.getCoordinateFromNotation("H1"), Side.WHITE, true));
+        boardBuilder.setPiece(new Rook(BoardUtility.getCoordinateFromNotation("A1"), Side.WHITE, true));
+        boardBuilder.setPiece(new King(BoardUtility.getCoordinateFromNotation("E1"), Side.WHITE, true, false));
         board = boardBuilder.build();
-        MyList<Move> moves = board.getTile(59).getPiece().getLegalMoves(board);
-        assertTrue(moves.size() == 6);
+        MyList<Move> moves = board.getTile(BoardUtility.getCoordinateFromNotation("E1")).getPiece().getLegalMoves(board);
+        assertTrue(moves.size() == 7);
     } 
 }

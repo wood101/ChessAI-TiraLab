@@ -115,8 +115,11 @@ public class MyList<E> implements Iterable<E> {
         
     }
     
-    public void set(Integer key, E e) {
-        this.elements[key] = e;
+    public void set(Integer i, E e) {
+        if (i >= size || i < 0) {
+            throw new IndexOutOfBoundsException("Index: " + i + ", Size " + i);
+        }
+        this.elements[i] = e;
     }    
     
     /**
