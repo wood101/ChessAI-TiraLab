@@ -476,9 +476,9 @@ public class Table extends Observable {
         private void assignTileColor() {
             int rowNumber = BoardUtility.getRow(this.tileId);
             if(rowNumber == 1 || rowNumber == 3 || rowNumber == 5 || rowNumber == 7){
-                setBackground(this.tileId % 2 == 0 ? darkTileColor : lightTileColor);
-            } else {
                 setBackground(this.tileId % 2 == 0 ? lightTileColor : darkTileColor);
+            } else {
+                setBackground(this.tileId % 2 == 0 ? darkTileColor : lightTileColor);
             }
         }
         
