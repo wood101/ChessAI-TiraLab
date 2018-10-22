@@ -51,7 +51,7 @@ public class BoardUtility {
      */
     public static int getRow(int tileId) {
         int row = (int) Math.ceil((tileId + 1) / 8);
-        return row + 1;
+        return row;
     }
 
     
