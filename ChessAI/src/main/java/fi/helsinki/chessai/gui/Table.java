@@ -474,7 +474,7 @@ public class Table extends Observable {
          * Assigns the tiles as the right color to create a checkered board.
          */
         private void assignTileColor() {
-            int rowNumber = BoardUtility.getRow(this.tileId - 1);
+            int rowNumber = BoardUtility.getRow(this.tileId);
             if(rowNumber == 1 || rowNumber == 3 || rowNumber == 5 || rowNumber == 7){
                 setBackground(this.tileId % 2 == 0 ? darkTileColor : lightTileColor);
             } else {

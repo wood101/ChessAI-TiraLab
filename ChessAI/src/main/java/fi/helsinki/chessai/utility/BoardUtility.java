@@ -49,7 +49,7 @@ public class BoardUtility {
      * @param tileId
      * @return 
      */
-    public static int getRow(int tileId) {
+    public static int getRow(double tileId) {
         int row = (int) Math.ceil((tileId + 1) / 8);
         return row;
     }
