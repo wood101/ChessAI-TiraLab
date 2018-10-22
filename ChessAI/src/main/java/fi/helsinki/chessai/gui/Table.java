@@ -1,5 +1,6 @@
 package fi.helsinki.chessai.gui;
 
+import fi.helsinki.chessai.Side;
 import fi.helsinki.chessai.board.Board;
 import fi.helsinki.chessai.board.MoveTransition;
 import fi.helsinki.chessai.board.Tile;
@@ -18,14 +19,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.concurrent.ExecutionException;
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.border.Border;
 
 
 /**
@@ -78,6 +77,14 @@ public class Table extends Observable {
         this.panel = new BoardPanel();
         this.boardHistory = null;
         this.frame.add(panel, BorderLayout.CENTER);
+    }
+    
+    /**
+     * Adds text at the top of the board.
+     * @return 
+     */
+    private JLabel addTextBars() {
+        return new JLabel(this.getGameBoard().currentPlayer().toString() + " players turn");
     }
     
     /**
@@ -325,36 +332,34 @@ public class Table extends Observable {
                  */
                 @Override
                 public void mouseClicked(final MouseEvent me) {
-                    if(isRightMouseButton(me)) {
-                        clearState();
-                    } else if(isLeftMouseButton(me))
-                        if(sourceTile == null) {
-                            sourceTile = chessBoard.getTile(tileId);
-                            humanMovedPiece = sourceTile.getPiece();
-                            if(humanMovedPiece == null) {
-                                sourceTile = null;
-                            }
-                        } else if (!humanMovedPiece.getPieceSide().equals(chessBoard.currentPlayer().getSide())){
+                    if(chessBoard.currentPlayer().getSide() == Side.WHITE && Table.get().getGameSetup().getWhitePlayerType() == PlayerType.HUMAN || chessBoard.currentPlayer().getSide() == Side.BLACK && Table.get().getGameSetup().getBlackPlayerType() == PlayerType.HUMAN) {
+                        if(isRightMouseButton(me)) {
                             clearState();
-                        } else {
-                            destinationTile = chessBoard.getTile(tileId);
-                            final Move move = Move.MoveFactory.createMove(chessBoard, sourceTile.getTileCoordinate(), destinationTile.getTileCoordinate());
-                            MoveTransition transition;
-                            if(!move.equals(Move.NULL_MOVE)) {
-                                transition = chessBoard.currentPlayer().makeMove(move);
-                                if(transition.getMoveStatus().isDone()) {
-                                    chessBoard = (Board) transition.getBoard();
-                                    addToHistory();
+                        } else if(isLeftMouseButton(me))
+                            if(sourceTile == null) {
+                                addState(tileId);
+                            } else if (!humanMovedPiece.getPieceSide().equals(chessBoard.currentPlayer().getSide())){
+                                clearState();
+                            } else {
+                                destinationTile = chessBoard.getTile(tileId);
+                                final Move move = Move.MoveFactory.createMove(chessBoard, sourceTile.getTileCoordinate(), destinationTile.getTileCoordinate());
+                                MoveTransition transition;
+                                if(!move.equals(Move.NULL_MOVE)) {
+                                    transition = chessBoard.currentPlayer().makeMove(move);
+                                    if(transition.getMoveStatus().isDone()) {
+                                        chessBoard = (Board) transition.getBoard();
+                                        addToHistory();
+                                    }
                                 }
+                                clearState();
                             }
-                            clearState();
-                        }
-                    SwingUtilities.invokeLater(() -> {
-                        panel.drawBoard(chessBoard);
-                        Table.get().updateAfterMove(PlayerType.HUMAN);
-                    });
+                        SwingUtilities.invokeLater(() -> {
+                            panel.drawBoard(chessBoard);
+                            Table.get().updateAfterMove(PlayerType.HUMAN);
+                        });
+                    }
                 }
-
+                    
                 @Override
                 public void mousePressed(final MouseEvent me) {
                 }
@@ -364,21 +369,17 @@ public class Table extends Observable {
                 }
                 
                 /**
-                 * Gives borders on tiles with pieces on when hovered over with the mouse.
+                 * Sets a different color to tiles when hovered over with the mouse.
                  * @param me 
                  */
                 @Override
                 public void mouseEntered(final MouseEvent me) {
-                    if(chessBoard.getTile(tileId).occupied()) {
-                        Border raisedbevel = BorderFactory.createRaisedBevelBorder();
-                        Border loweredbevel = BorderFactory.createLoweredBevelBorder();
-                        setBorder(BorderFactory.createCompoundBorder(raisedbevel, loweredbevel));
+                        setBorder(BorderFactory.createLineBorder(Color.WHITE, 5));
                         panel.drawBoard(chessBoard);
-                    }
                 }
                 
                 /**
-                 * Removes the border when not hovering over a piece.
+                 * Removes the color when not hovering over a piece.
                  * @param me 
                  */
                 @Override
@@ -406,6 +407,17 @@ public class Table extends Observable {
                 }
             });
             validate();
+        }
+        
+        /**
+         * Adds a new mouse selection.
+         */
+        private void addState(int tile) {
+                sourceTile = chessBoard.getTile(tile);
+                humanMovedPiece = sourceTile.getPiece();
+                if(humanMovedPiece == null) {
+                    sourceTile = null;
+                }
         }
         
         /**
@@ -469,7 +481,7 @@ public class Table extends Observable {
                 setBackground(this.tileId % 2 == 0 ? lightTileColor : darkTileColor);
             }
         }
-
+        
         /**
          * Draws a single tile.
          * @param board 

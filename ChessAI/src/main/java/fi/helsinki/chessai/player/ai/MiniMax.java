@@ -3,6 +3,7 @@ package fi.helsinki.chessai.player.ai;
 import fi.helsinki.chessai.board.Board;
 import fi.helsinki.chessai.board.Move;
 import fi.helsinki.chessai.board.MoveTransition;
+import fi.helsinki.chessai.gui.Table;
 
 /**
  * Class for the Minimax algorithm.

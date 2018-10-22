@@ -26,6 +26,8 @@ class GameSetup extends JDialog {
      * @param frame
      */
     GameSetup(final JFrame frame) {
+        whitePlayerType = PlayerType.HUMAN;
+        blackPlayerType = PlayerType.HUMAN;
         final JPanel myPanel = new JPanel(new GridLayout(0, 1));
         final JRadioButton whiteHumanButton = new JRadioButton(HUMAN_TEXT);
         final JRadioButton whiteComputerButton = new JRadioButton(COMPUTER_TEXT);

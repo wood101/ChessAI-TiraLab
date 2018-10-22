@@ -16,6 +16,7 @@
 | 7.10. | 1    | Bug fix |
 | 8.10. | 2    | Implemented stalemate and tried to optimize the code around it |
 | 12.10. | 4    | Tests, packaging |
+| 23.10. | 3    | UI improvements |
 
 <br>
-Total hours: 57
+Total hours: 60
