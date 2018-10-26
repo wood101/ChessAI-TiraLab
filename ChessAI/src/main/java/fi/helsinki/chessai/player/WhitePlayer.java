@@ -5,7 +5,6 @@
  */
 package fi.helsinki.chessai.player;
 
-import fi.helsinki.chessai.Side;
 import fi.helsinki.chessai.board.Board;
 import fi.helsinki.chessai.board.Tile;
 import fi.helsinki.chessai.board.Move;

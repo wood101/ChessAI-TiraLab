@@ -6,7 +6,7 @@ package fi.helsinki.chessai.utility;
  * and open the template in the editor.
  */
 import fi.helsinki.chessai.board.Move;
-import fi.helsinki.chessai.Side;
+import fi.helsinki.chessai.player.Side;
 import fi.helsinki.chessai.board.Board;
 import fi.helsinki.chessai.board.Tile;
 import fi.helsinki.chessai.board.pieces.Piece;

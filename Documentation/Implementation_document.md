@@ -1,11 +1,15 @@
 # Implementation
 
-## [Chess rules](https://en.wikipedia.org/wiki/Rules_of_chess)
+## Class diagram
+
+<img src="https://raw.githubusercontent.com/wood101/ChessAITiraLab/master/Documentation/Graphs/class_diagram.png">
+
+Most inner classes are not included, because it would make the diagram unreadably messy. Under Chess pieces class are all the pieces (rook, king, pawn etc.).
 
 ## Chess engine
 
-The chess engine itself draws a interactable chess board, where you can move the pieces with the mouse. You can choose to play against another player by taking turns on the same computer or against a bot. This can be found on the top bar under options. You can also set the search depth of the algorithm. I recommend three when it is bot vs. bot and four for bot vs. humans. When a piece is selected the possible moves are highlighted.
+The chess engine itself draws a interactable chess board, where you can move the pieces with the mouse. You can play against another player or against a bot. Bots can also play against each other.
 
 ## Bot
 
-The bot uses the minimax algorith with alpha-beta pruning to perform a limited depth search of the best move. Pieces are evaluated by their type and position on the board. Some positional values will change when the game has progressed enough. The evaluation is also affected by the number of moves required to reach a chessmate, castling, number of moves possible moves in total.
+The bot uses the [Minimax algorith](https://en.wikipedia.org/wiki/Minimax) with [alpha-beta pruning](https://en.wikipedia.org/wiki/Alpha%E2%80%93beta_pruning) to perform a limited depth search of the best move. Pieces are evaluated by their type. The evaluation is also affected by the number of moves required to reach a chessmate, castling, number of moves possible moves in total. Evaluation also has a random number (between 0-9) attached to make bot vs. bot games more interesting.

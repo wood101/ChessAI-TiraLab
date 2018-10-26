@@ -1,4 +1,4 @@
-package fi.helsinki.chessai;
+package fi.helsinki.chessai.player;
 
 import fi.helsinki.chessai.player.BlackPlayer;
 import fi.helsinki.chessai.player.Player;

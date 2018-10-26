@@ -1,6 +1,6 @@
 package fi.helsinki.chessai.gui;
 
-import fi.helsinki.chessai.Side;
+import fi.helsinki.chessai.player.Side;
 import fi.helsinki.chessai.board.Board;
 import fi.helsinki.chessai.board.MoveTransition;
 import fi.helsinki.chessai.board.Tile;
@@ -80,41 +80,33 @@ public class Table extends Observable {
     }
     
     /**
-     * Adds text at the top of the board.
-     * @return 
-     */
-    private JLabel addTextBars() {
-        return new JLabel(this.getGameBoard().currentPlayer().toString() + " players turn");
-    }
-    
-    /**
      * Populates the menu bar with things.
      * @param menu 
      */
     private JMenuBar createMenu() {
         JMenuBar menu = new JMenuBar();
-        menu.add(createFileMenu());
+        menu.add(createGameMenu());
         menu.add(createOptionsMenu());
         return menu;
     }
     
     /**
-     * Creates the file menu for the menu bar
+     * Creates the game menu for the menu bar
      * @return 
      */
-    private JMenu createFileMenu() {
-        final JMenu fileMenu = new JMenu("File");
+    private JMenu createGameMenu() {
+        final JMenu gameMenu = new JMenu("Game");
         final JMenuItem exitMenuItem = new JMenuItem("Exit");
         exitMenuItem.addActionListener((ActionEvent e) -> {
             System.exit(0);
         });
-        fileMenu.add(exitMenuItem);
         final JMenuItem restartMenuItem = new JMenuItem("Restart");
         restartMenuItem.addActionListener((ActionEvent e) -> {
             initializeGame();
         });
-        fileMenu.add(restartMenuItem);
-        return fileMenu;
+        gameMenu.add(restartMenuItem);
+        gameMenu.add(exitMenuItem);
+        return gameMenu;
     }
     
     /**

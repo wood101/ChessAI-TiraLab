@@ -1,6 +1,6 @@
 package fi.helsinki.chessai.gui;
 
-import fi.helsinki.chessai.Side;
+import fi.helsinki.chessai.player.Side;
 import fi.helsinki.chessai.gui.Table.PlayerType;
 import fi.helsinki.chessai.player.Player;
 import javax.swing.*;

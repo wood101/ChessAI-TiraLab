@@ -5,7 +5,7 @@
  */
 
 import fi.helsinki.chessai.board.Move;
-import fi.helsinki.chessai.Side;
+import fi.helsinki.chessai.player.Side;
 import fi.helsinki.chessai.board.Board;
 import fi.helsinki.chessai.board.Board.Builder;
 import fi.helsinki.chessai.board.pieces.*;

@@ -7,7 +7,9 @@ Functioning chess game with an AI you can play against.
 <br>
 [Testing](http://github.com/wood101/ChessAITiraLab/blob/master/Documentation/Testing_document.md)
 <br>
-[Implementation](http://github.com/wood101/ChessAITiraLab/blob/master/Documentation/Implementation_document.md)
+[Implementation(http://github.com/wood101/ChessAITiraLab/blob/master/Documentation/Implementation_document.md)
+<br>
+[User Guide](http://github.com/wood101/ChessAITiraLab/blob/master/Documentation/User_Guide_document.md)
 
 ## Weekly reports
 

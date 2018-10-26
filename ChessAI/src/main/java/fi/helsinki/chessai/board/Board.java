@@ -1,6 +1,6 @@
 package fi.helsinki.chessai.board;
 
-import fi.helsinki.chessai.Side;
+import fi.helsinki.chessai.player.Side;
 import fi.helsinki.chessai.board.pieces.*;
 import fi.helsinki.chessai.player.BlackPlayer;
 import fi.helsinki.chessai.player.Player;
