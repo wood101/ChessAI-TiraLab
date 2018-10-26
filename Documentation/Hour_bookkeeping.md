@@ -17,6 +17,7 @@
 | 8.10. | 2    | Implemented stalemate and tried to optimize the code around it |
 | 12.10. | 4    | Tests, packaging |
 | 23.10. | 3    | UI improvements |
+| 26.10. | 2    | Final touches and documentation |
 
 <br>
-Total hours: 60
+Total hours: 62

@@ -26,3 +26,5 @@ Functioning chess game with an AI you can play against.
 [Week 6](http://github.com/wood101/ChessAITiraLab/blob/master/Documentation/Week6.md)
 
 ## [Hour bookkeeping](http://github.com/wood101/ChessAITiraLab/blob/master/Documentation/Hour_bookkeeping.md)
+
+## [Jar file of the game](https://github.com/wood101/ChessAITiraLab/releases/download/v1.0/ChessAI-1.0.jar)

@@ -1,6 +1,12 @@
 # Testing
 
-The most important thing in a chess bot is the results and speed in which it achieves said results. This document will contain tests that compare the bots speed at different stages of the game and with different search depths of the minimax tree. 
+## Test coverage
+
+Jacoco test coverage:
+
+<img src="https://raw.githubusercontent.com/wood101/ChessAITiraLab/master/Documentation/Graphs/jacoco.png">
+
+## Speed testing
 
 This graph shows the time in milliseconds it took for the AI to calculate the next move after white moved from E2 to E4. Black always moved from E7 to E5.
 
